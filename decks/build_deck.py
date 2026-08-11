@@ -126,12 +126,11 @@ PLAN=[
     (GB,2,959,None),          # 3  03 Agenda
     (GB,3,959,None),          # 4  04 Reaktivierung
     (GB,4,959,None),          # 5  05 Reaktivierung
-    (SK,3,960,'06'),          # 6  <- Skizze S.4  Die Strecke
-    (SK,4,960,'07'),          # 7  <- Skizze S.5  Telefon-Agent
-    (GB,5,959,'08'),          # 8  Nutzen
-    (GB,6,959,'09'),          # 9  Reaktivierung
-    (GB,7,959,'10'),          # 10 Schwarzbuch
-    (GB,8,959,'11'),          # 11 Konditionen
+    (SK,4,960,'06'),          # 6  <- Skizze S.5  Telefon-Agent
+    (GB,5,959,'07'),          # 7  Nutzen
+    (GB,6,959,'08'),          # 8  Werthebel
+    (GB,7,959,'09'),          # 9  Schwarzbuch
+    (GB,8,959,'10'),          # 10 Konditionen
 ]
 
 TARGET_W, TARGET_H = 959.0, 540.0   # the Goebel deck's page box
