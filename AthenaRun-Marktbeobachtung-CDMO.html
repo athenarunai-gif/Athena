@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>AthenaRun — Marktbeobachtung CDMO</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* ==========================================================================
+   Gestaltungsraster übernommen aus Autohaus_Goebel_x_AthenaRun.pdf
+   Seite 959 × 540 pt · Satzspiegel 55 pt · Space Grotesk / Space Mono
+   ========================================================================== */
+:root{
+  --bg:#FAF7F1;        /* Creme          */
+  --ink:#1F1E1C;       /* Tinte          */
+  --body:#8A8781;      /* Fließtext grau */
+  --faint:#BBB6AE;     /* Mono-Labels    */
+  --line:#E7E5DE;      /* Haarlinie      */
+  --block:#EFE9DF;     /* Beige-Fläche   */
+  --accent:#D9542B;    /* Akzent         */
+  --m:55pt;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#8A8781}
+body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);
+     -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+
+.slide{
+  position:relative; width:959pt; height:540pt; overflow:hidden;
+  background:var(--bg) radial-gradient(circle, #EBE7DF 0.6pt, transparent 0.7pt) 0 0/21pt 21pt;
+  padding:0 var(--m); display:flex; flex-direction:column;
+  page-break-after:always; break-after:page;
+}
+.slide:last-child{page-break-after:auto;break-after:auto}
+
+/* ---------- Kopfzone ---------- */
+.head{padding-top:36pt;position:relative}
+.kicker{font-family:'Space Mono';font-size:8pt;letter-spacing:.2em;text-transform:uppercase;
+        color:var(--accent);margin-bottom:9pt}
+.kicker.grey{color:var(--faint)}
+.title{font-size:24pt;font-weight:500;letter-spacing:-.015em;line-height:1.15}
+.subtitle{font-size:10.5pt;color:var(--body);line-height:1.5;margin-top:7pt;max-width:430pt}
+.marker{position:absolute;right:0;bottom:17pt;font-family:'Space Mono';font-size:8pt;
+        letter-spacing:.2em;color:var(--faint);white-space:nowrap}
+.rule{height:1px;background:var(--line);margin-top:14pt}
+.body{flex:1;padding-top:30pt;min-height:0}
+
+/* ---------- Typo-Bausteine ---------- */
+.lead{font-size:17pt;line-height:1.42;letter-spacing:-.01em}
+.lead .hl{font-weight:700}
+.h{font-size:14pt;font-weight:500;letter-spacing:-.01em;line-height:1.25}
+.b{font-size:10pt;color:var(--body);line-height:1.5;margin-top:5pt}
+.b .hl{color:var(--ink);font-weight:500}
+.label{font-family:'Space Mono';font-size:7.5pt;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.label.acc{color:var(--accent)}
+.mono{font-family:'Space Mono';font-size:8pt;line-height:1.65;color:var(--body)}
+.mono .acc{color:var(--accent)}
+.acc{color:var(--accent)}
+
+/* ---------- Nummerierte Liste mit Haarlinien ---------- */
+.items{margin-top:12pt}
+.item{display:grid;grid-template-columns:24pt 1fr;gap:12pt;padding:13pt 0;border-top:1px solid var(--line)}
+.item .n{font-family:'Space Mono';font-size:8pt;color:var(--faint);padding-top:3pt}
+.item.on .n{color:var(--accent)}
+
+/* ---------- Spalten mit senkrechter Haarlinie ---------- */
+.cols{display:grid;gap:0}
+.cols > *{padding:0 26pt;border-left:1px solid var(--line)}
+.cols > *:first-child{padding-left:0;border-left:0}
+.cols > *:last-child{padding-right:0}
+
+/* ---------- Prozess-Strecke mit kurzer Oberkante ---------- */
+.strip{display:grid;grid-template-columns:repeat(4,1fr)}
+.strip > div{padding:0 24pt;border-left:1px solid var(--line)}
+.strip > div:first-child{padding-left:0;border-left:0}
+.strip > div:last-child{padding-right:0}
+.cap{width:34pt;height:2pt;background:#C9C5BC;margin-bottom:16pt}
+.cap.on{background:var(--accent)}
+
+/* ---------- Beige Flächen mit Pfeilen ---------- */
+.blocks{display:grid;grid-template-columns:1fr 26pt 1fr 26pt 1fr;align-items:stretch}
+.block{background:var(--block);padding:22pt 24pt;min-height:118pt}
+.arrow{font-family:'Space Mono';font-size:12pt;color:var(--accent);text-align:center;align-self:center}
+
+/* ---------- Viererraster mit durchgehenden Haarlinien ---------- */
+.quad{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.quad > div{padding:24pt 0}
+.quad > div:nth-child(odd){border-right:1px solid var(--line);padding-right:52pt}
+.quad > div:nth-child(even){padding-left:52pt}
+.quad > div:nth-child(n+3){border-top:1px solid var(--line)}
+
+/* ---------- Merkmalsliste mit Haarlinien ---------- */
+.ticks{display:flex;flex-direction:column}
+.tick{display:grid;grid-template-columns:14pt 1fr;gap:8pt;padding:9pt 0;border-top:1px solid var(--line);
+      font-size:9.5pt;line-height:1.45;color:var(--body)}
+.tick:last-child{border-bottom:1px solid var(--line)}
+.tick .d{color:var(--faint);font-family:'Space Mono';font-size:8pt}
+.tick .hl{color:var(--ink);font-weight:500}
+
+/* ---------- Gegenüberstellung ---------- */
+.row{display:grid;grid-template-columns:150pt 1fr 1fr;column-gap:26pt;
+     border-top:1px solid var(--line);padding:13pt 0}
+.row.hd{border-top:0;padding:0 0 10pt}
+.row .k{font-size:10pt;color:var(--body)}
+.row .old{font-size:10pt;color:var(--faint)}
+.row .new{font-size:10pt;color:var(--ink);font-weight:500}
+
+/* ---------- Fußzeile ---------- */
+.foot{display:flex;align-items:flex-end;justify-content:space-between;
+      padding:12pt 0 26pt;border-top:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:6pt}
+.logo svg{width:15pt;height:15pt;color:var(--accent)}
+.logo span{font-size:14pt;font-weight:700;letter-spacing:-.02em}
+.tagline{font-family:'Space Mono';font-size:7.5pt;letter-spacing:.12em;color:var(--faint)}
+
+/* ---------- Titelfolie ---------- */
+.hero{font-size:64pt;font-weight:400;line-height:1.0;letter-spacing:-.025em}
+.hero b{font-weight:700}
+.hero .x{color:var(--accent);font-weight:400}
+
+/* ---------- Kennzahl ---------- */
+.stat{font-weight:300;letter-spacing:-.03em;line-height:.95}
+.stat .u{font-size:.42em;font-weight:400;letter-spacing:0}
+
+@page{size:959pt 540pt;margin:0}
+@media screen{ body{display:flex;flex-direction:column;align-items:center;gap:14pt;padding:14pt 0} }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ 01 · Titel ══════════════ -->
+<section class="slide">
+  <div class="head" style="padding-top:30pt">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div class="label">Gesprächsgrundlage · Vertraulich</div>
+      <div class="label">Dok. AR-CDMO · 08/2026</div>
+    </div>
+    <div class="rule" style="margin-top:11pt"></div>
+  </div>
+
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;padding-top:0">
+    <div class="hero">
+      Marktbeobachtung CDMO<br>
+      <span class="x">×</span> <b>AthenaRun</b>
+    </div>
+    <div style="font-size:18pt;line-height:1.35;color:var(--ink);margin-top:30pt;max-width:520pt;letter-spacing:-.01em">
+      Ein wöchentlicher Newsletter, dessen Quellenlage sich belegen lässt — keine KI, die
+      stillschweigend weniger liefert.
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="logo">
+      <svg viewBox="0 0 70.1445 69.8402" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.0078,0h56.6585c2.3085,0,4.1832,1.8653,4.1947,4.1738l.2835,56.6915c.0124,2.4796-3.5307,2.9248-4.1321.5192l-8.4761-33.9046c-1.8201-7.2802-7.5045-12.9646-14.7847-14.7847L8.4991,4.1322c-2.3995-.5999-1.9647-4.1322.5087-4.1322Z" fill="currentColor"/>
+        <path d="M45.2096,37.9781L3.3785,69.3983c-1.9407,1.4577-4.3943-.996-2.9367-2.9366L31.8618,24.6306c3.162-4.2099,9.138-5.0591,13.3477-1.8972,5.0582,3.6732,5.0288,11.5747,0,15.2448h0Z" fill="currentColor"/>
+      </svg>
+      <span>AthenaRun</span>
+    </div>
+    <div class="tagline">Quellen validiert &nbsp;/&nbsp; Ausfälle gemeldet &nbsp;/&nbsp; Export signiert</div>
+  </div>
+</section>
+
+<!-- ══════════════ 02 · Ausgangslage ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="title">Ihr Ziel, und was in der ersten Stunde daraus wurde</div>
+    <div class="marker">02 — Ausgangslage</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body" style="display:grid;grid-template-columns:1fr 1fr;column-gap:56pt">
+    <div>
+      <div class="lead">
+        „A comprehensive weekly newsletter to understand <span class="hl">key trends</span> in the CDMO sector.“
+      </div>
+      <div class="b" style="font-size:10.5pt;margin-top:14pt;max-width:370pt">
+        Das ist die Anforderung. Geprüft haben wir zuerst nicht die Texte, sondern die Quellen,
+        aus denen sie kommen sollen.
+      </div>
+
+      <div class="label" style="margin-top:34pt">HTTP-Status zweier Quellen</div>
+      <div class="stat" style="font-size:110pt;margin-top:2pt">410</div>
+      <div class="mono" style="margin-top:10pt;max-width:330pt">
+        <span class="acc">Gone</span> — Betrieb dauerhaft eingestellt. Eine Routine ruft
+        sie weiter ab und meldet nichts.
+      </div>
+    </div>
+
+    <div>
+      <div class="label grey">Drei Befunde aus dem ersten Lauf</div>
+      <div class="items">
+        <div class="item on">
+          <div class="n">01</div>
+          <div>
+            <div class="h">Zwei Quellen sind tot</div>
+            <div class="b">HTTP 410, Betrieb eingestellt. Sie standen weiter auf der Liste und wurden weiter abgefragt.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="n">02</div>
+          <div>
+            <div class="h">Mehrere verbieten AI-Nutzung explizit</div>
+            <div class="b">FT, Endpoints und andere. Wer sie trotzdem verarbeitet, hat kein Quellenproblem, sondern ein Lizenzproblem.</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="n">03</div>
+          <div>
+            <div class="h">Der Ausfall bleibt unsichtbar</div>
+            <div class="b">Ein Chat liefert halt weniger und fasst zusammen, was übrig ist. Niemand merkt es — die Lücke steht in keinem Ergebnis.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 03 · Agenda ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="title">Worüber wir heute sprechen</div>
+    <div class="subtitle">Zwei Punkte. Beide betreffen nicht die Qualität der Zusammenfassung, sondern ihre Belegbarkeit.</div>
+    <div class="marker">03 — Agenda</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body" style="display:flex;align-items:center">
+    <div class="cols" style="grid-template-columns:1fr 1fr;width:100%">
+      <div>
+        <div style="font-size:62pt;font-weight:300;color:var(--accent);line-height:1;letter-spacing:-.03em">01</div>
+        <div class="title" style="margin-top:18pt;font-size:20pt">Prozess-Beweis statt Selbstauskunft</div>
+        <div class="b" style="font-size:10.5pt;max-width:330pt">
+          Was eine Modellantwort über die eigenen Quellen wert ist — und was stattdessen
+          maschinell entsteht.
+        </div>
+      </div>
+      <div>
+        <div style="font-size:62pt;font-weight:300;line-height:1;letter-spacing:-.03em;
+                    color:transparent;-webkit-text-stroke:1pt #C9C5BC">02</div>
+        <div class="title" style="margin-top:18pt;font-size:20pt">Verantwortung ist delegierbar,<br>an einen Chat nicht</div>
+        <div class="b" style="font-size:10.5pt;max-width:330pt">
+          Wer haftet, wenn eine Woche ausfällt — und warum ein Abo diese Frage nicht beantworten kann.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 · Argument 1 ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Argument 1 · Nachweis</div>
+    <div class="title">Prozess-Beweis statt Selbstauskunft</div>
+    <div class="marker">04 — Nachweis</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body" style="display:grid;grid-template-columns:1fr 400pt;column-gap:48pt">
+    <div>
+      <div class="label grey">Was „Frag Claude nach der Quellenliste“ liefert</div>
+      <div class="items">
+        <div class="item">
+          <div class="n">01</div>
+          <div class="h" style="font-weight:400;font-size:11.5pt;line-height:1.4">
+            Eine <span style="font-weight:500">Behauptung des Modells</span> — dieselbe Klasse Output
+            wie ein halluziniertes Zitat.
+          </div>
+        </div>
+        <div class="item">
+          <div class="n">02</div>
+          <div class="h" style="font-weight:400;font-size:11.5pt;line-height:1.4">
+            Unabhängig prüfbar ist daran <span style="font-weight:500">nichts</span>.
+          </div>
+        </div>
+        <div class="item">
+          <div class="n">03</div>
+          <div class="h" style="font-weight:400;font-size:11.5pt;line-height:1.4">
+            Scheitert ein Abruf, fasst der Chat <span style="font-weight:500">stillschweigend zusammen,
+            was er hat</span>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block" style="min-height:0;align-self:start;padding:26pt 28pt">
+      <div class="label">Was unser Lauf erzeugt</div>
+      <div class="h" style="margin-top:12pt;font-size:15pt">Maschinen-Evidenz, nicht Auskunft</div>
+      <div class="ticks" style="margin-top:14pt">
+        <div class="tick"><div class="d">01</div><div><span class="hl">HTTP-Status</span> je Quelle, je Lauf</div></div>
+        <div class="tick"><div class="d">02</div><div><span class="hl">Item-Hashes</span> und Zeitstempel</div></div>
+        <div class="tick"><div class="d">03</div><div><span class="hl">Hash-verkettete Audit-Kette</span> mit signiertem Export</div></div>
+      </div>
+      <div class="label" style="margin-top:18pt">Status</div>
+      <div class="mono" style="margin-top:6pt">Läuft bereits — Teil der <span class="acc">158 Tests</span>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 05 · Die Strecke im Ernstfall ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Argument 1 · Ernstfall</div>
+    <div class="title">Wenn jemand den Prozess sehen will</div>
+    <div class="marker">05 — Nachweis</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body">
+    <div class="blocks">
+      <div class="block">
+        <div class="label">Auslöser</div>
+        <div class="h" style="margin-top:10pt">„Zeigen Sie Ihren Marktbeobachtungs&shy;prozess.“</div>
+        <div class="b">VRP, Versicherer oder Prüfer — die Frage kommt nicht angekündigt.</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="block">
+        <div class="label">Was übergeben wird</div>
+        <div class="h acc" style="margin-top:10pt">Ein signierter Export</div>
+        <div class="b">Hash-verkettete Kette, HTTP-Status je Quelle, Zeitstempel je Lauf. Kein Chat-Transkript.</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="block">
+        <div class="label">Ergebnis</div>
+        <div class="h" style="margin-top:10pt">Nachweislich sorgfältig</div>
+        <div class="b">Prüfbar ohne Auslegung — und ohne die Frage, was das Modell an dem Tag geantwortet hätte.</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:56pt;margin-top:36pt">
+      <div>
+        <div class="label acc">Ihre eigene Analogie</div>
+        <div class="lead" style="font-size:15pt;margin-top:10pt">
+          Bayer/Monsanto: Haftung entfällt bei <span class="hl">nachweislich</span> sorgfältiger Grundlage.
+          <span class="acc">„Nachweislich“ ist das Produkt.</span>
+        </div>
+      </div>
+      <div class="ticks">
+        <div class="tick"><div class="d">✳</div><div><span class="hl">Die Kette entsteht im Lauf</span>, nicht auf Nachfrage — rückwirkend lässt sie sich nicht herstellen.</div></div>
+        <div class="tick"><div class="d">✳</div><div><span class="hl">Jeder Ausfall steht drin</span>, auch der, den niemand bemerkt hätte.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 06 · Argument 2 ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Argument 2 · Verantwortung</div>
+    <div class="title">Verantwortung ist delegierbar, an einen Chat nicht</div>
+    <div class="marker">06 — Verantwortung</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body" style="display:flex;align-items:center">
+    <div class="quad">
+      <div>
+        <div class="label">01</div>
+        <div class="h" style="margin-top:9pt">Eine Vertragspartei haftet</div>
+        <div class="b">Bei uns ist eine Vertragspartei dafür verantwortlich, dass das Monitoring
+          <span class="hl">läuft</span>, <span class="hl">vollständig</span> ist und
+          <span class="hl">rechtlich sauber beschafft</span> wird.</div>
+      </div>
+      <div>
+        <div class="label">02</div>
+        <div class="h" style="margin-top:9pt">Ein Abo schuldet ihr nichts</div>
+        <div class="b">Verhungert die Routine still, <span class="hl">haftet niemand</span>. Es gibt keine
+          Zusage, die verletzt werden könnte — und keinen Adressaten für die Frage, warum Wochen fehlen.</div>
+      </div>
+      <div>
+        <div class="label">03</div>
+        <div class="h" style="margin-top:9pt">Identischer Lauf, jede Woche</div>
+        <div class="b">Ergebnisse bleiben über Monate vergleichbar — die Voraussetzung für die gewünschte
+          <span class="hl">Trendanalyse</span>. Ein Chat improvisiert jede Woche neu.</div>
+      </div>
+      <div>
+        <div class="label">04</div>
+        <div class="h" style="margin-top:9pt">Beweisbar whitelist-only</div>
+        <div class="b">Beschaffung ausschließlich aus freigegebenen Quellen. Eine
+          <span class="hl">offene Websuche</span> spült FT-Content über Snippets herein — ob sie will oder nicht.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 · Gegenüberstellung ══════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Zusammengefasst</div>
+    <div class="title">Chat-Routine oder Marktbeobachtung</div>
+    <div class="marker">07 — Vergleich</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="body" style="padding-top:22pt">
+    <div class="row hd"><div></div><div class="label grey">Chat / Abo</div><div class="label acc">AthenaRun</div></div>
+    <div class="row"><div class="k">Quellenliste</div><div class="old">Behauptung des Modells</div><div class="new">HTTP-Status je Quelle, je Lauf</div></div>
+    <div class="row"><div class="k">Quellenausfall</div><div class="old">bleibt stumm, Output schrumpft</div><div class="new">erkannt, gemeldet, ersetzt</div></div>
+    <div class="row"><div class="k">Nachweis</div><div class="old">Chat-Transkript</div><div class="new">signierter Export, hash-verkettet</div></div>
+    <div class="row"><div class="k">Verantwortung</div><div class="old">niemand</div><div class="new">Vertragspartei</div></div>
+    <div class="row"><div class="k">Wiederholbarkeit</div><div class="old">wöchentlich neu improvisiert</div><div class="new">identischer Lauf, über Monate vergleichbar</div></div>
+    <div class="row"><div class="k">Beschaffung</div><div class="old">offene Websuche, FT-Content über Snippets</div><div class="new">beweisbar whitelist-only</div></div>
+  </div>
+
+  <div class="foot">
+    <div class="logo">
+      <svg viewBox="0 0 70.1445 69.8402" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.0078,0h56.6585c2.3085,0,4.1832,1.8653,4.1947,4.1738l.2835,56.6915c.0124,2.4796-3.5307,2.9248-4.1321.5192l-8.4761-33.9046c-1.8201-7.2802-7.5045-12.9646-14.7847-14.7847L8.4991,4.1322c-2.3995-.5999-1.9647-4.1322.5087-4.1322Z" fill="currentColor"/>
+        <path d="M45.2096,37.9781L3.3785,69.3983c-1.9407,1.4577-4.3943-.996-2.9367-2.9366L31.8618,24.6306c3.162-4.2099,9.138-5.0591,13.3477-1.8972,5.0582,3.6732,5.0288,11.5747,0,15.2448h0Z" fill="currentColor"/>
+      </svg>
+      <span>AthenaRun</span>
+    </div>
+    <div class="tagline">Gesprächsgrundlage · vertraulich — Marktbeobachtung CDMO</div>
+  </div>
+</section>
+
+</body>
+</html>
