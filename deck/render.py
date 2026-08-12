@@ -44,9 +44,9 @@ def render(path, out_prefix):
             x, y = sh.left / PX, sh.top / PX
             w, h = sh.width / PX, sh.height / PX
             if sh.shape_type == 13:                       # picture
-                pic = Image.open(io.BytesIO(sh.image.blob)).convert("RGB")
-                img.paste(pic.resize((max(1, int(w)), max(1, int(h)))),
-                          (int(x), int(y)))
+                pic = Image.open(io.BytesIO(sh.image.blob)).convert("RGBA")
+                pic = pic.resize((max(1, int(w)), max(1, int(h))))
+                img.paste(pic, (int(x), int(y)), pic)
                 continue
             if sh.has_text_frame and sh.text_frame.text.strip():
                 tf = sh.text_frame
@@ -82,7 +82,12 @@ def render(path, out_prefix):
                     top = y + max(0, (h - total) / 2) + pi * lead
                     for li, ln in enumerate(lines):
                         wl = sum(d.textlength(t, font=f) for t, f, _ in ln)
-                        cx = x + (w - wl) if para.alignment == 3 else x
+                        if para.alignment == 3:
+                            cx = x + (w - wl)
+                        elif para.alignment == 2:
+                            cx = x + (w - wl) / 2
+                        else:
+                            cx = x
                         if cx + wl > 1880:
                             warnings.append(
                                 f"slide {idx}: line runs to x={cx+wl:.0f} — {ln[0][0]!r}")
@@ -91,9 +96,26 @@ def render(path, out_prefix):
                             d.text((cx, top + li * lead + (asc - a)), t, font=f, fill=col)
                             cx += d.textlength(t, font=f)
                 continue
-            try:                                          # plain filled rectangle
-                c = sh.fill.fore_color.rgb
-                d.rectangle([x, y, x + w, y + h], fill=(c[0], c[1], c[2]))
+            try:
+                try:
+                    st = int(sh.auto_shape_type)   # OVAL=9, DIAMOND=4
+                except Exception:
+                    st = int(sh.shape_type)
+                if st == 9:                               # oval
+                    fc = sh.fill.fore_color.rgb
+                    lc = sh.line.color.rgb
+                    lw = max(1, int((sh.line.width.pt if sh.line.width else 1) * 2))
+                    d.ellipse([x, y, x + w, y + h],
+                              fill=(fc[0], fc[1], fc[2]),
+                              outline=(lc[0], lc[1], lc[2]), width=lw)
+                elif st == 4:                             # diamond
+                    c = sh.fill.fore_color.rgb
+                    d.polygon([(x + w/2, y), (x + w, y + h/2),
+                               (x + w/2, y + h), (x, y + h/2)],
+                              fill=(c[0], c[1], c[2]))
+                else:
+                    c = sh.fill.fore_color.rgb
+                    d.rectangle([x, y, x + w, y + h], fill=(c[0], c[1], c[2]))
             except Exception:
                 pass
         img.save(f"{out_prefix}-{idx:02d}.png")
