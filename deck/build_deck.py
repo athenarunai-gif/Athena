@@ -1,15 +1,15 @@
-"""AthenaRun deck v3 — 13 slides (8 main + 5 appendix).
+"""AthenaRun deck v4 — 13 slides (8 main + 5 appendix).
 
-v3 implements the design review on top of the v2 restructure:
-- type scale one step up everywhere (nothing below 10pt)
-- real process graphics: friction icons between the manual steps (slide 2),
-  numbered node chains with orange human gates (slides 3-4), LEARN loop
-  drawn as an arc (slide 4)
-- orange carries exactly one meaning per slide (61, gates, arc, results, Excel)
-- slide 1 gains the tagline under the thesis, loses its tiny footer twin
-- slide 2 stat inverted to 61% "no EBIT impact" (same McKinsey figure)
-- slides 3/4 titled by what they actually deliver
-- slide 7 renamed "One question."
+v4 answers the second design review:
+- Poppins everywhere, matching the original export's display face, so the
+  rebuilt slides stop reading as a different deck
+- slide 2's rule-and-tick strip is replaced by the same node chain used on
+  slides 3-4, with the friction stack (handoff / document / wait) sitting in
+  each gap: same chain, different transitions
+- slide 3's chain gets larger nodes, sublabels and a drawn gate legend
+- slide 4's orange swoosh becomes an orthogonal feedback loop
+- no glyphs outside Poppins' charset: arrows, gates and brackets are drawn
+  as shapes or use ASCII, never box-drawing characters
 
 Slides are flat PNG exports; rebuilt slides get a regenerated background
 (flat #0E0E11 + the 44px dot grid) with native, editable text.
@@ -23,6 +23,8 @@ from pptx.util import Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
+
+from PIL import ImageFont
 
 import icons
 
@@ -39,12 +41,11 @@ RULE    = RGBColor(0x2B, 0x2B, 0x2D)
 DIV     = RGBColor(0x1F, 0x1F, 0x22)
 PANEL   = RGBColor(0x16, 0x16, 0x19)
 
-SANS, MONO = "Arial", "Courier New"
+SANS, MONO = "Poppins", "Courier New"
 
-# type scale, one step up from v2 (1 px = 0.5 pt)
-TITLE, SUB, MARKER = 28, 14, 11
-SECLABEL, STAGE, STAGE_SUB = 11, 16, 12
-BODY, BIG, SMALL, SRC_PT = 14, 64, 11, 10
+TITLE, SUB, MARKER = 27, 14, 11
+SECLABEL, STAGE, STAGE_SUB = 11, 17, 12
+BODY, BIG, SMALL, SRC_PT = 14, 54, 11, 10
 
 L, R = 110, 1809
 
@@ -65,41 +66,44 @@ def redot(draw, x0, y0, x1, y1):
                 draw.rectangle([x, y, x + 1, y + 1], fill=DOT)
 
 
-def rect(slide, x, y, w, h, colour):
-    s = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x * PX, y * PX,
-                               max(w, 1) * PX, max(h, 1) * PX)
-    s.fill.solid(); s.fill.fore_color.rgb = colour
-    s.line.fill.background(); s.shadow.inherit = False
-    return s
-
-
-def circle(slide, cx, cy, d_, line_col, line_w=1.5, fill=None):
-    s = slide.shapes.add_shape(MSO_SHAPE.OVAL, int(cx - d_ / 2) * PX,
-                               int(cy - d_ / 2) * PX, d_ * PX, d_ * PX)
+def shape(slide, kind, x, y, w, h, fill, line_col=None, line_w=1.25, rot=None):
+    s = slide.shapes.add_shape(kind, int(x) * PX, int(y) * PX,
+                               max(int(w), 1) * PX, max(int(h), 1) * PX)
     if fill is None:
-        s.fill.solid(); s.fill.fore_color.rgb = RGBColor(*BG)
+        s.fill.background()
     else:
-        s.fill.solid(); s.fill.fore_color.rgb = fill
-    s.line.color.rgb = line_col
-    s.line.width = Pt(line_w)
+        s.fill.solid()
+        s.fill.fore_color.rgb = fill
+    if line_col is None:
+        s.line.fill.background()
+    else:
+        s.line.color.rgb = line_col
+        s.line.width = Pt(line_w)
     s.shadow.inherit = False
+    if rot is not None:
+        s.rotation = rot
     return s
 
 
-def diamond(slide, cx, cy, d_, colour):
-    s = slide.shapes.add_shape(MSO_SHAPE.DIAMOND, int(cx - d_ / 2) * PX,
-                               int(cy - d_ / 2) * PX, d_ * PX, d_ * PX)
-    s.fill.solid(); s.fill.fore_color.rgb = colour
-    s.line.fill.background(); s.shadow.inherit = False
-    return s
+def text_w(text, pt, bold=False):
+    """Width in slide pixels (1 px = 0.5 pt), measured in the real face."""
+    f = ImageFont.truetype(
+        "fonts/Poppins-SemiBold.ttf" if bold else "fonts/Poppins-Regular.ttf",
+        int(pt * 2))
+    return f.getlength(text)
 
 
-def tf_at(slide, x, y, w, h, anchor=MSO_ANCHOR.MIDDLE):
-    tb = slide.shapes.add_textbox(x * PX, y * PX, w * PX, h * PX)
+def rect(slide, x, y, w, h, colour):
+    return shape(slide, MSO_SHAPE.RECTANGLE, x, y, w, h, colour)
+
+
+def tf_at(slide, x, y, w, h):
+    tb = slide.shapes.add_textbox(int(x) * PX, int(y) * PX,
+                                  int(w) * PX, int(h) * PX)
     tf = tb.text_frame
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     tf.word_wrap = True
-    tf.vertical_anchor = anchor
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
     return tf
 
 
@@ -128,7 +132,7 @@ def header(slide, bold_part, muted_part, marker):
     line(slide, L, 90, 1560, 62,
          [(bold_part, TITLE, WHITE, SANS, True, None),
           (" " + muted_part, TITLE, MUTED, SANS, False, None)])
-    line(slide, R - 500, 98, 500, 22,
+    line(slide, R - 500, 98, 500, 24,
          [(marker, MARKER, MUTED, MONO, False, 1.2)], align=PP_ALIGN.RIGHT)
     rect(slide, L, 172, R - L, 1, RULE)
 
@@ -138,33 +142,38 @@ def logo(slide):
 
 
 def pic(slide, name, x, y, w, h):
-    slide.shapes.add_picture(name, x * PX, y * PX, w * PX, h * PX)
+    slide.shapes.add_picture(name, int(x) * PX, int(y) * PX,
+                             int(w) * PX, int(h) * PX)
 
 
-def node_chain(slide, y_mid, x0, x1, nodes, start_no=1, gate_entry=False):
-    """Numbered circle nodes on a continuous line, orange diamond gates
-    between them. nodes = [(name, sub), ...]"""
+def gate(slide, cx, cy, size=15):
+    """Human-gate marker: a small orange diamond straddling the spine."""
+    shape(slide, MSO_SHAPE.DIAMOND, cx - size / 2, cy - size / 2,
+          size, size, ORANGE)
+
+
+def chain(slide, y, x0, x1, nodes, start_no=1, gates=False, node_d=76):
+    """Spine with numbered circular nodes, labels and optional gates between."""
     n = len(nodes)
     pitch = (x1 - x0) / n
-    centers = [int(x0 + pitch / 2 + i * pitch) for i in range(n)]
-    rect(slide, x0, y_mid, x1 - x0, 1, RULE)
-    if gate_entry:
-        diamond(slide, x0 + 8, y_mid, 16, ORANGE)
-    for i, cx in enumerate(centers):
-        if i:
-            diamond(slide, int(cx - pitch / 2), y_mid, 16, ORANGE)
-    for i, (cx, (name, sub)) in enumerate(zip(centers, nodes)):
-        circle(slide, cx, y_mid, 64, MUTED, 1.5)
-        line(slide, cx - 40, y_mid - 16, 80, 32,
-             [(f"{start_no + i:02d}", 13, MUTED, MONO, False, 1.0)],
+    cx = [int(x0 + pitch / 2 + i * pitch) for i in range(n)]
+    rect(slide, x0, y, x1 - x0, 1, RULE)
+    for i in range(n):
+        if gates and i:
+            gate(slide, cx[i] - pitch / 2, y)
+        shape(slide, MSO_SHAPE.OVAL, cx[i] - node_d / 2, y - node_d / 2,
+              node_d, node_d, RGBColor(*BG), MUTED, 1.25)
+        line(slide, cx[i] - 40, y - 15, 80, 30,
+             [(f"{start_no + i:02d}", 13, MUTED, MONO, False, 0.8)],
              align=PP_ALIGN.CENTER)
-        line(slide, cx - 150, y_mid + 48, 300, 34,
+    for i, (name, sub) in enumerate(nodes):
+        line(slide, cx[i] - 160, y + node_d / 2 + 22, 320, 34,
              [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
         if sub:
-            line(slide, cx - 150, y_mid + 84, 300, 26,
+            line(slide, cx[i] - 160, y + node_d / 2 + 58, 320, 26,
                  [(sub, STAGE_SUB, MUTED, SANS, False, None)],
                  align=PP_ALIGN.CENTER)
-    return centers
+    return cx, pitch
 
 
 # ==========================================================================
@@ -180,9 +189,9 @@ with zipfile.ZipFile(SRC) as z:
         Image.open(fh).convert("RGB").crop((100, 1014, 270, 1054)).save("logo.png")
 
 d = ImageDraw.Draw(opener)
-d.rectangle([100, 92, 640, 122], fill=BG)          # "INVESTOR BRIEFING" line
+d.rectangle([100, 92, 640, 122], fill=BG)
 redot(d, 100, 92, 640, 122)
-d.rectangle([800, 940, 1870, 1000], fill=BG)       # tiny footer tagline
+d.rectangle([800, 940, 1870, 1000], fill=BG)
 redot(d, 800, 940, 1870, 1000)
 opener.save("image1_patched.png")
 
@@ -212,53 +221,47 @@ def new_slide():
     return s
 
 
-# ---- SLIDE 1 — opener: tagline joins the thesis ---------------------------
-s1 = S[0]
-line(s1, 116, 726, 1200, 44,
+# ---- SLIDE 1 — opener -----------------------------------------------------
+line(S[0], 116, 726, 1200, 44,
      [("We build the chain, not the generator.", 17, ORANGE, SANS, False, None)])
 
-# ---- SLIDE 2 — Still manual ----------------------------------------------
+# ---- SLIDE 2 — the manual chain -------------------------------------------
 s2 = S[1]
 header(s2, "Still manual.", "And that is where the money goes.",
        "02 — The problem")
-line(s2, L, 242, 600, 28,
+line(s2, L, 232, 700, 26,
      [("STILL MANUAL", SECLABEL, MUTED, MONO, False, 3.0)])
 
-pitch2 = (R - L) / 5
-rect(s2, L, 300, R - L, 1, RULE)
-rect(s2, L, 301, R - L, 1, MUTED)
-for i, name in enumerate(["Requirements", "Feasibility", "Compliance",
-                          "Approval", "Operations"]):
-    x = int(L + i * pitch2)
-    rect(s2, x, 300, 64, 6, MUTED)
-    line(s2, x, 336, int(pitch2) - 104, 50,
-         [(name, 19, WHITE, SANS, False, None)])
-    if i:                                # friction stack in each gap
-        gx = x - 70
-        pic(s2, "ic-handoff.png", gx, 336, 28, 28)
-        pic(s2, "ic-doc.png", gx, 376, 28, 28)
-        pic(s2, "ic-wait.png", gx, 416, 28, 28)
-line(s2, L, 480, 1500, 30,
+cx2, pitch2 = chain(s2, 366, L, R,
+                    [("Requirements", None), ("Feasibility", None),
+                     ("Compliance", None), ("Approval", None),
+                     ("Operations", None)])
+for i in range(1, 5):                       # friction stack in every gap
+    gx = int(cx2[i] - pitch2 / 2)
+    for j, ic in enumerate(["ic-handoff.png", "ic-doc.png", "ic-wait.png"]):
+        pic(s2, ic, gx - 41 + j * 30, 300, 22, 22)
+
+line(s2, L, 492, 1500, 30,
      [("Five steps around the code. Every one of them a handoff, "
        "a document, a wait.", BODY, MUTED, SANS, False, None)])
-rect(s2, L, 556, R - L, 1, RULE)
+rect(s2, L, 548, R - L, 1, RULE)
 
-line(s2, L, 588, 1500, 28,
+line(s2, L, 578, 1500, 26,
      [("THEY BOUGHT THE GENERATOR — THE CHAIN AROUND IT IS STILL MANUAL",
        SECLABEL, MUTED, MONO, False, 2.0)])
-tf = tf_at(s2, L, 626, 900, 130)
+tf = tf_at(s2, L, 612, 900, 130)
 p = tf.paragraphs[0]
 run(p, "61", BIG, ORANGE)
-run(p, "%", 26, MUTED)
-line(s2, L, 766, 1200, 30,
+run(p, "%", 24, MUTED)
+line(s2, L, 764, 1200, 30,
      [("of organizations see no EBIT impact from AI",
        BODY, MUTED, SANS, False, None)])
-rect(s2, L, 830, R - L, 1, RULE)
-line(s2, L, 862, 1560, 34,
+rect(s2, L, 812, R - L, 1, RULE)
+line(s2, L, 838, 1560, 34,
      [("The expensive failures happen before a line of code.",
        16, WHITE, SANS, True, None),
       (" That’s the part we automate.", 16, MUTED, SANS, False, None)])
-line(s2, L, 908, 1500, 24,
+line(s2, L, 880, 1500, 24,
      [("Source: McKinsey, The State of AI in 2025 — 39% attribute any "
        "EBIT impact to AI", SRC_PT, MUTED, MONO, False, None)])
 
@@ -271,15 +274,18 @@ line(s3, L, 196, 1480, 76,
       ("Discover through AI Memory", SUB, WHITE, SANS, True, None),
       (" — from first conversation to a build-ready package.",
        SUB, MUTED, SANS, False, None)], spacing=19)
-line(s3, L, 376, 900, 28,
+
+chain(s3, 440, L, R,
+      [("Discover", "from conversation"), ("Analyze", "scope + fit"),
+       ("Research", "cited, deep"), ("Compliance", "pre-build gate"),
+       ("AI Memory", "patterns carried in")], gates=True)
+
+gate(s3, L + 7, 622)
+line(s3, L + 26, 610, 700, 26,
+     [("human gate at every transition", SECLABEL, MUTED, MONO, False, 1.5)])
+rect(s3, L, 706, R - L, 1, RULE)
+line(s3, L, 736, 900, 26,
      [("IDEA TO BUILD-READY PACKAGE", SECLABEL, MUTED, MONO, False, 3.0)])
-node_chain(s3, 560, L, R,
-           [("Discover", "from conversation"), ("Analyze", "scope + fit"),
-            ("Research", "cited, deep"), ("Compliance", "pre-build gate"),
-            ("AI Memory", "patterns carried in")])
-line(s3, L, 740, 1200, 26,
-     [("◆", 12, ORANGE, SANS, False, None),
-      ("   human gate at every transition", SECLABEL, MUTED, MONO, False, 1.5)])
 
 # ---- SLIDE 4 — package to running software --------------------------------
 s4 = new_slide()
@@ -290,39 +296,48 @@ line(s4, L, 196, 1480, 76,
       (" — from approved package to software running in production. "
        "Every decision that matters stays with a person.",
        SUB, MUTED, SANS, False, None)], spacing=19)
-line(s4, L, 376, 900, 28,
-     [("PACKAGE TO RUNNING SOFTWARE", SECLABEL, MUTED, MONO, False, 3.0)])
 
-# mini-trail: part 1, already done
-rect(s4, 140, 560, 400, 1, DIV)
+# part one, already completed
+rect(s4, 150, 440, 300, 1, DIV)
 for i in range(5):
-    circle(s4, 140 + i * 100, 560, 14, DIM, 1.0)
-line(s4, 110, 596, 460, 22,
+    shape(s4, MSO_SHAPE.OVAL, 150 + i * 75 - 7, 433, 14, 14,
+          RGBColor(*BG), DIM, 1.0)
+line(s4, 110, 472, 380, 24,
      [("01–05 · build-ready package", 10, DIM, MONO, False, 1.0)],
      align=PP_ALIGN.CENTER)
-rect(s4, 540, 560, 60, 1, RULE)
 
-node_chain(s4, 560, 600, R,
-           [("Build", "code + review"), ("Release", "human approval"),
-            ("Operate", "monitoring")], start_no=6, gate_entry=True)
+cx4, pitch4 = chain(s4, 440, 520, R,
+                    [("Build", "code + review"), ("Release", "human approval"),
+                     ("Operate", "monitoring")], start_no=6, gates=True)
+gate(s4, 528, 440)
 
-pic(s4, "ic-arc.png", 330, 640, 1280, 170)
-line(s4, 310, 830, 1300, 26,
+# LEARN: an orthogonal feedback loop, not a swoosh
+LOOP_Y, LX, RX = 636, 300, cx4[-1]
+rect(s4, RX, 576, 2, LOOP_Y - 576, ORANGE)
+rect(s4, LX, LOOP_Y, RX - LX, 2, ORANGE)
+rect(s4, LX, 528, 2, LOOP_Y - 528, ORANGE)
+shape(s4, MSO_SHAPE.ISOSCELES_TRIANGLE, LX - 8, 508, 18, 22, ORANGE)
+line(s4, LX + 40, LOOP_Y + 14, 1100, 26,
      [("LEARN", SECLABEL, ORANGE, MONO, False, 2.0),
       ("  ·  validated patterns from every build carry into the next",
-       SECLABEL, MUTED, MONO, False, 1.5)], align=PP_ALIGN.CENTER)
+       SECLABEL, MUTED, MONO, False, 1.5)])
+rect(s4, L, 706, R - L, 1, RULE)
+line(s4, L, 736, 900, 26,
+     [("PACKAGE TO RUNNING SOFTWARE", SECLABEL, MUTED, MONO, False, 3.0)])
 
 # ---- SLIDE 5 — our moat ---------------------------------------------------
 s5 = S[3]
 header(s5, "Our moat.", "Every build makes the next one safer.",
        "05 — The moat")
-line(s5, L, 236, 900, 50,
-     [("Build", 22, WHITE, SANS, False, None),
-      ("  ►  ", 16, MUTED, SANS, False, None),
-      ("Capture", 22, WHITE, SANS, False, None),
-      ("  ►  ", 16, MUTED, SANS, False, None),
-      ("Reuse", 22, WHITE, SANS, False, None)])
-line(s5, L, 306, 1080, 124,
+x = L
+for i, word in enumerate(["Build", "Capture", "Reuse"]):
+    w = text_w(word, 22)
+    line(s5, x, 232, w + 12, 46, [(word, 22, WHITE, SANS, False, None)])
+    x += w + 30
+    if i < 2:
+        shape(s5, MSO_SHAPE.ISOSCELES_TRIANGLE, x, 250, 13, 15, MUTED, rot=90)
+        x += 43
+line(s5, L, 302, 1240, 116,
      [("Anyone can generate code. What compounds is what real production "
        "builds taught us — every project writes validated patterns and "
        "documented failures back into the library, and every next build "
@@ -330,15 +345,13 @@ line(s5, L, 306, 1080, 124,
        BODY, MUTED, SANS, False, None)], spacing=19)
 rect(s5, L, 452, R - L, 1, RULE)
 
-line(s5, L, 482, 700, 28,
+line(s5, L, 484, 700, 26,
      [("THE PATTERN LIBRARY", SECLABEL, MUTED, MONO, False, 3.0)])
-line(s5, L, 530, 460, 88,
-     [("Hundreds", 40, WHITE, SANS, False, None)])
-line(s5, L, 626, 460, 30,
+line(s5, L, 530, 460, 84, [("Hundreds", 38, WHITE, SANS, False, None)])
+line(s5, L, 624, 460, 30,
      [("validated patterns", BODY, WHITE, SANS, False, None)])
-line(s5, 590, 530, 480, 88,
-     [("Thousands", 40, ORANGE, SANS, False, None)])
-line(s5, 590, 626, 480, 30,
+line(s5, 590, 530, 480, 84, [("Thousands", 38, ORANGE, SANS, False, None)])
+line(s5, 590, 624, 480, 30,
      [("documented anti-patterns", BODY, WHITE, SANS, False, None)])
 line(s5, L, 690, 960, 28,
      [("The LEARN loop from the chain is what fills this library.",
@@ -346,7 +359,7 @@ line(s5, L, 690, 960, 28,
 
 rect(s5, 1092, 470, 1, 420, DIV)
 rect(s5, 1140, 470, 669, 420, PANEL)
-line(s5, 1180, 502, 580, 22,
+line(s5, 1180, 504, 580, 24,
      [("WHY IT'S DEFENSIBLE", SECLABEL, MUTED, MONO, False, 2.5)])
 for i, (head, body) in enumerate([
         ("Earned, not bought.",
@@ -355,13 +368,12 @@ for i, (head, body) in enumerate([
          "Every project makes the next estimate, gate and build safer."),
         ("Capital can’t copy it.",
          "A bigger round buys code, not failures already survived.")]):
-    y = 548 + i * 108
-    line(s5, 1180, y, 580, 28,
-         [(head, 13, ORANGE, SANS, True, None)])
-    line(s5, 1180, y + 32, 580, 58,
+    y = 552 + i * 106
+    line(s5, 1180, y, 580, 28, [(head, 13, ORANGE, SANS, True, None)])
+    line(s5, 1180, y + 32, 580, 64,
          [(body, SMALL, MUTED, SANS, False, None)], spacing=15)
 
-# ---- SLIDE 6 — references (placeholders stay) -----------------------------
+# ---- SLIDE 6 — references (placeholders kept) -----------------------------
 s6 = new_slide()
 header(s6, "References.", "Three builds, three problems.", "06 — References")
 line(s6, L, 208, 1400, 30,
@@ -373,16 +385,14 @@ for i, (name, ic) in enumerate([("CFO App", "ic-chart.png"),
                                 ("Board Assistant", "ic-bubble.png")]):
     x = L + i * 570
     rect(s6, x, 340, 520, 450, PANEL)
-    pic(s6, ic, x + 40, 378, 36, 36)
-    line(s6, x + 40, 430, 440, 40,
-         [(name, 20, WHITE, SANS, False, None)])
-    for j, (lab, ph) in enumerate([("CLIENT / SECTOR", "⟨Kunde oder Branche⟩"),
-                                   ("WHAT WE BUILT", "⟨was gebaut wurde⟩"),
-                                   ("RESULT", "⟨Ergebnis in einer Zeile⟩")]):
+    pic(s6, ic, x + 40, 378, 34, 34)
+    line(s6, x + 40, 428, 440, 44, [(name, 20, WHITE, SANS, False, None)])
+    for j, (lab, ph) in enumerate([("CLIENT / SECTOR", "[Kunde oder Branche]"),
+                                   ("WHAT WE BUILT", "[was gebaut wurde]"),
+                                   ("RESULT", "[Ergebnis in einer Zeile]")]):
         y = 500 + j * 92
-        line(s6, x + 40, y, 440, 18,
-             [(lab, 9, MUTED, MONO, False, 2.0)])
-        line(s6, x + 40, y + 24, 440, 56,
+        line(s6, x + 40, y, 440, 20, [(lab, 9, MUTED, MONO, False, 2.0)])
+        line(s6, x + 40, y + 26, 440, 54,
              [(ph, 13, ORANGE, SANS, False, None)], spacing=16)
 line(s6, L, 828, 1500, 24,
      [("PLACEHOLDER — replace the three bracketed fields per tile before "
@@ -394,19 +404,18 @@ header(s7, "One question.", "", "07 — One question")
 line(s7, L, 292, 1400, 32,
      [("Ich lasse Ihnen eine Frage da, keinen Prospekt.",
        SUB, MUTED, SANS, False, None)])
-line(s7, L, 348, 1620, 256,
-     [("Welcher Prozess bei Ihnen läuft heute in ",
-       34, WHITE, SANS, False, None),
-      ("Excel", 34, ORANGE, SANS, False, None),
-      (" und sollte es seit einem Jahr nicht mehr?",
-       34, WHITE, SANS, False, None)], spacing=42)
-line(s7, L, 664, 1400, 76,
+line(s7, L, 348, 1620, 260,
+     [("Welcher Prozess bei Ihnen läuft heute in ", 33, WHITE, SANS, False, None),
+      ("Excel", 33, ORANGE, SANS, False, None),
+      (" und sollte es seit einem Jahr nicht mehr?", 33, WHITE, SANS, False, None)],
+     spacing=44)
+line(s7, L, 668, 1400, 80,
      [("Wenn Ihnen dazu gerade etwas eingefallen ist — sprechen Sie mich an. "
        "Wir machen daraus eine Anwendung. Und wenn Ihnen zwanzig einfallen, "
        "reden wir über die Plattform statt über die Anwendung.",
        12, MUTED, SANS, False, None)], spacing=16)
-line(s7, R - 700, 950, 700, 24,
-     [("⟨Name · E-Mail · Telefon⟩", SRC_PT, ORANGE, MONO, False, None)],
+line(s7, R - 700, 950, 700, 26,
+     [("[Name · E-Mail · Telefon]", SRC_PT, ORANGE, MONO, False, None)],
      align=PP_ALIGN.RIGHT)
 
 # ---- SLIDE 8 — appendix divider ------------------------------------------
@@ -419,10 +428,9 @@ for s in (s2, s3, s4, s5, s6, s7, s8):
 # ---- reorder --------------------------------------------------------------
 lst = prs.slides._sldIdLst
 ids = list(lst)
-order = [0, 1, 2, 9, 3, 10, 11, 12, 4, 5, 6, 7, 8]
 for e in ids:
     lst.remove(e)
-for i in order:
+for i in [0, 1, 2, 9, 3, 10, 11, 12, 4, 5, 6, 7, 8]:
     lst.append(ids[i])
 
 prs.save(OUT)

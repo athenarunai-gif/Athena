@@ -1,8 +1,9 @@
 """Render a pptx to PNGs by walking its real shape tree.
 
 LibreOffice cannot load pptx in this environment, so QA reads the geometry back
-out of the saved file instead of trusting the generator. DejaVu stands in for
-Arial/Courier and runs wider, so anything that fits here fits in PowerPoint.
+out of the saved file instead of trusting the generator. Poppins is the real
+display face, so text metrics here match PowerPoint; Courier stands in for the
+mono labels and runs slightly wider.
 """
 import io
 import sys
@@ -13,8 +14,8 @@ from pptx.util import Emu
 
 PX = 6350
 W, H = 1920, 1080
-SANS = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-SANS_B = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+SANS = "fonts/Poppins-Regular.ttf"
+SANS_B = "fonts/Poppins-SemiBold.ttf"
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 
 warnings = []
@@ -75,7 +76,7 @@ def render(path, out_prefix):
                     if cur:
                         lines.append(cur)
                     total = lead * len(lines)
-                    if total > h + 2:
+                    if len(lines) > 1 and total > h + 2:
                         warnings.append(
                             f"slide {idx}: text overflows box "
                             f"({total:.0f}px in {h:.0f}px) — {sh.text_frame.text[:48]!r}")
@@ -101,7 +102,13 @@ def render(path, out_prefix):
                     st = int(sh.auto_shape_type)   # OVAL=9, DIAMOND=4
                 except Exception:
                     st = int(sh.shape_type)
-                if st == 9:                               # oval
+                if st == 7:                               # isosceles triangle
+                    c = sh.fill.fore_color.rgb
+                    rot = sh.rotation or 0
+                    pts = ([(x + w/2, y), (x + w, y + h), (x, y + h)] if rot < 45
+                           else [(x + w, y + h/2), (x, y), (x, y + h)])
+                    d.polygon(pts, fill=(c[0], c[1], c[2]))
+                elif st == 9:                             # oval
                     fc = sh.fill.fore_color.rgb
                     lc = sh.line.color.rgb
                     lw = max(1, int((sh.line.width.pt if sh.line.width else 1) * 2))
