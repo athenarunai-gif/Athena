@@ -121,15 +121,16 @@ def overlay(page_w, page_h, patch, rect):
     return pypdf.PdfReader(buf).pages[0]
 
 # ------------------------------------------------------------------- assemble
-import strecke_slide
+import strecke_slide, slide3_patch
 NEW='strecke.pdf'
 strecke_slide.build(NEW, corner='07 — Strecke')
 
-# (source pdf, page index, page width pt, new two-digit number or None)
+# (source pdf, page index, page width pt, new two-digit number or None,
+#  optional extra vector overlay)
 PLAN=[
     (GB,0,959,None),          # 1  title
     (GB,2,959,'02'),          # 2  Agenda        (war Folie 3)
-    (GB,1,959,'03'),          # 3  Ausgangslage  (war Folie 2)
+    (GB,1,959,'03',slide3_patch.overlay_page),   # 3  Ausgangslage (war Folie 2)
     (GB,3,959,None),          # 4  04 Reaktivierung
     (GB,4,959,None),          # 5  05 Reaktivierung
     (SK,4,960,'06'),          # 6  <- Skizze S.5  Telefon-Agent
@@ -144,11 +145,15 @@ TARGET_W, TARGET_H = 959.0, 540.0   # the Goebel deck's page box
 
 readers={p:pypdf.PdfReader(p) for p in {e[0] for e in PLAN}}
 writer=pypdf.PdfWriter()
-for pdf,idx,W,num in PLAN:
+for entry in PLAN:
+    pdf,idx,W,num = entry[:4]
+    extra = entry[4] if len(entry)>4 else None
     page=readers[pdf].pages[idx]
     if num:
         patch,rect=patch_number(pdf, idx, W*S, list(num))
         page.merge_page(overlay(float(page.mediabox.width), float(page.mediabox.height), patch, rect))
+    if extra:
+        page.merge_page(extra())
     # give every slide the same page box so viewers don't rescale between slides
     pw, ph = float(page.mediabox.width), float(page.mediabox.height)
     if (pw, ph) != (TARGET_W, TARGET_H):
