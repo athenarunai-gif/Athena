@@ -14,8 +14,8 @@ W, H = 959.0, 540.0
 BG, INK = HexColor('#FAF7F1'), HexColor('#736D68')
 DOT, GRID, PHASE, DOTR = HexColor('#F2EFE9'), 22.0, 9.88, 0.75
 
-X0, BASE1, LEADING = 596.0, 379.2, 14.0   # left edge, first baseline, line pitch
-SIZE, WRAP = 8.95, 205.0
+X0, BASE1, LEADING = 595.81, 378.99, 14.0  # left edge, baseline, line pitch (measured)
+SIZE, WRAP = 8.867, 205.0   # size from cap height: 6.81pt ink / 0.768 em
 FONT='Sora-Regular'
 WIPE=(593.0, 368.0, 806.0, 398.5)         # x0, ytop, x1, ybot
 
