@@ -121,6 +121,10 @@ def overlay(page_w, page_h, patch, rect):
     return pypdf.PdfReader(buf).pages[0]
 
 # ------------------------------------------------------------------- assemble
+import strecke_slide
+NEW='strecke.pdf'
+strecke_slide.build(NEW, corner='07 — Strecke')
+
 # (source pdf, page index, page width pt, new two-digit number or None)
 PLAN=[
     (GB,0,959,None),          # 1  title
@@ -129,15 +133,16 @@ PLAN=[
     (GB,3,959,None),          # 4  04 Reaktivierung
     (GB,4,959,None),          # 5  05 Reaktivierung
     (SK,4,960,'06'),          # 6  <- Skizze S.5  Telefon-Agent
-    (GB,5,959,'07'),          # 7  Nutzen
-    (GB,6,959,'08'),          # 8  Werthebel
-    (GB,7,959,'09'),          # 9  Schwarzbuch
-    (GB,8,959,'10'),          # 10 Konditionen
+    (NEW,0,959,None),         # 7  <- neu gebaut: Strecken-Schaubild
+    (GB,5,959,'08'),          # 8  Nutzen
+    (GB,6,959,'09'),          # 9  Werthebel
+    (GB,7,959,'10'),          # 10 Schwarzbuch
+    (GB,8,959,'11'),          # 11 Konditionen
 ]
 
 TARGET_W, TARGET_H = 959.0, 540.0   # the Goebel deck's page box
 
-readers={GB:pypdf.PdfReader(GB), SK:pypdf.PdfReader(SK)}
+readers={p:pypdf.PdfReader(p) for p in {e[0] for e in PLAN}}
 writer=pypdf.PdfWriter()
 for pdf,idx,W,num in PLAN:
     page=readers[pdf].pages[idx]
