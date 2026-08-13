@@ -62,12 +62,12 @@ def arrow(c, cx, cy, size=6.5):
     p.lineTo(cx-size*0.1, y(cy)+size*0.52); p.close()
     c.drawPath(p, stroke=0, fill=1)
 
-STEPS=[('Anbinden','DMS, CRM, Sage'),
+STEPS=[('Anbinden','Sage'),
        ('Bereinigen','Dubletten, Adressen'),
        ('Anlass','Finanzierung, Service'),
        ('Auswahl','mit Begründung'),
        ('Freigabe','Mensch entscheidet'),
-       ('Ansprache','Mail, Telefon, WhatsApp'),
+       ('Ansprache','Mail, Telefon'),
        ('Rückfluss','Ergebnis ins System')]
 GROUPS=[('BESTAND ZU ANLASS', 0, 3), ('ANLASS ZU TERMIN', 4, 6)]
 
