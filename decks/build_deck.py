@@ -72,6 +72,8 @@ def learn(pdf, idx, W, digits):
         gb,bg,fg=digit_slot(arr, groups[k][0], groups[k][1], y0, y1)
         GLYPHS[d]=alpha_of(arr, gb, bg, fg)
 
+learn(GB,1,3836,[None,'2'])  # "02 - Ausgangslage"
+learn(GB,2,3836,[None,'3'])  # "03 - Agenda"
 learn(GB,5,3836,['0','6'])   # "06 - Nutzen"
 learn(GB,6,3836,[None,'7'])  # "07 - Reaktivierung"
 learn(GB,7,3836,[None,'8'])  # "08 - Schwarzbuch"
@@ -122,8 +124,8 @@ def overlay(page_w, page_h, patch, rect):
 # (source pdf, page index, page width pt, new two-digit number or None)
 PLAN=[
     (GB,0,959,None),          # 1  title
-    (GB,1,959,None),          # 2  02 Ausgangslage
-    (GB,2,959,None),          # 3  03 Agenda
+    (GB,2,959,'02'),          # 2  Agenda        (war Folie 3)
+    (GB,1,959,'03'),          # 3  Ausgangslage  (war Folie 2)
     (GB,3,959,None),          # 4  04 Reaktivierung
     (GB,4,959,None),          # 5  05 Reaktivierung
     (SK,4,960,'06'),          # 6  <- Skizze S.5  Telefon-Agent
