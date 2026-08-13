@@ -62,7 +62,7 @@ def arrow(c, cx, cy, size=6.5):
     p.lineTo(cx-size*0.1, y(cy)+size*0.52); p.close()
     c.drawPath(p, stroke=0, fill=1)
 
-STEPS=[('Anbinden','Sage'),
+STEPS=[('Anbinden',''),
        ('Bereinigen','Dubletten, Adressen'),
        ('Anlass','Finanzierung, Service'),
        ('Auswahl','mit Begründung'),
@@ -102,7 +102,8 @@ def build(path, corner='07 — Strecke'):
         c.setFillColor(PANEL); c.rect(x0, y(BOXT+BOXH), BOXW, BOXH, stroke=0, fill=1)
         c.setFillColor(ACCENT); c.rect(x0, y(BOXT+BAR), BOXW, BAR, stroke=0, fill=1)
         text(c, x0+BOXW/2, BOXT+29.0, title, 'Sora-SemiBold', 11.5, INK,   align='center')
-        text(c, x0+BOXW/2, BOXT+47.0, sub,   'Sora-Regular',   7.0, MUTED, align='center')
+        if sub:   # keep the titles on one baseline across the row
+            text(c, x0+BOXW/2, BOXT+47.0, sub, 'Sora-Regular', 7.0, MUTED, align='center')
         if i < len(STEPS)-1:
             arrow(c, x0+BOXW+GAP/2, BOXT+BOXH/2+1)
 
