@@ -58,7 +58,7 @@ def ai_band(x0, x1, label="AI AGENTS SUPPORT EVERY STAGE"):
     """The continuous coverage bar under the rail — the counterpart to the
     discrete gate diamonds on it."""
     return [
-        card(x0, BAND_Y, x1 - x0, BAND_H),
+        card(x0, BAND_Y, x1 - x0, BAND_H, fill=CARD2, line=DIM),
         text(x0, BAND_Y + 0.09, x1 - x0, 0.17,
              run(label, T_MICRO, MUTED, font=MONO, spc=200), align="ctr"),
     ]
@@ -84,18 +84,31 @@ def outcome_card(label, statement, accent_label=False):
 # --------------------------------------------------------------------------
 # slide 1 — cover
 # --------------------------------------------------------------------------
+COVER_SUB_COLOR = "C9C9CE"   # sampled out of the original cover artwork
+
+
+def patch_cover_art():
+    """The cover sub-line is baked into the background artwork, em dash and all.
+    Lift it out of the bitmap by copying a clean strip of the dotted backdrop
+    over it (the dot grid has a 44 px period, so a 88 px offset lands exactly on
+    the grid) and re-set the line as live Poppins text."""
+    from PIL import Image
+    src = f"{UNPACKED}/ppt/media/image1.png"
+    im = Image.open(src).convert("RGB")
+    clean = im.crop((0, 744, im.width, 788))
+    im.paste(clean, (0, 656))
+    im.save(src)
+
+
 def slide1():
-    """The hero headline lives in the brand background artwork and is kept
-    untouched; the dead band below it now carries the thesis and the proof."""
+    """The hero headline stays in the brand artwork. The sub-line is repainted as
+    live text so it can lose its em dash."""
     s = [background("rId2")]
+    s += [text(0.77, 4.57, 9.5, 0.24,
+               run("The bottleneck has moved from writing code to everything around it.",
+                   T_STAGE, COVER_SUB_COLOR))]
     s += [text(M, 5.02, 9.0, 0.28,
                run("We build the chain, not the generator.", T_STAGE, ACCENT, bold=True))]
-    s += [hairline(5.62)]
-    s += [text(M, 5.86, W, 0.17, [
-        run("SELECTED PROGRAMS", T_META, DIM, font=MONO, spc=200),
-        run("   HESSEN AI COHORT 2026  ·  CYBERLAB KARLSRUHE 2026  ·  NVIDIA INCEPTION",
-            T_META, MUTED, font=MONO, spc=200),
-    ])]
     return s, ["image1.png"]
 
 
@@ -110,7 +123,7 @@ def slide2():
     s += header("Still manual.", " And that is where the money goes.", "The problem")
 
     # band A — the five manual steps that sit around the code
-    s += [eyebrow(M, 1.45, "FIVE STEPS AROUND THE CODE — NOT ONE OF THEM IS CODE",
+    s += [eyebrow(M, 1.45, "FIVE STEPS AROUND THE CODE. NOT ONE OF THEM IS CODE",
                   w=9.0, spc=200)]
     s += [text(M, 1.74, 10.42, 0.21,
                run("Every one of them a handoff, a document, a wait.", T_LEAD, MUTED))]
@@ -127,8 +140,6 @@ def slide2():
                    align="ctr")]
 
     s += [hairline(3.46)]
-    s += [eyebrow(M, 3.62, "THEY BOUGHT THE GENERATOR — THE CHAIN AROUND IT IS STILL MANUAL",
-                  w=W, spc=200)]
 
     # band B left — what it costs
     s += [text(M, 4.02, 3.0, 0.90,
@@ -166,7 +177,7 @@ def slide2():
     # footer
     s += [hairline(6.30)]
     s += [text(M, 6.50, 9.0, 0.17,
-               run("Source: McKinsey, The State of AI in 2025 — 39% attribute any EBIT impact to AI",
+               run("Source: McKinsey, The State of AI in 2025. 39% attribute any EBIT impact to AI",
                    T_META, DIM, font=MONO))]
     s += [logo("rId3")]
     return s, ["image2.png", "image16.png", "image10.png", "image11.png", "image12.png"]
@@ -187,7 +198,7 @@ def slide3():
         run("One line, a human gate at every step. AI agents support every stage, ",
             T_LEAD, MUTED),
         run("Discover through AI Memory", T_LEAD, MUTED, bold=True),
-        run(" — from first conversation to a build-ready package.", T_LEAD, MUTED),
+        run(". From first conversation to a build-ready package.", T_LEAD, MUTED),
     ])]
 
     s += from_to("FROM  ·  FIRST CONVERSATION", "TO  ·  BUILD-READY PACKAGE")
@@ -203,15 +214,18 @@ def slide3():
     s += gate_legend()
     s += ai_band(NODE_X_5[0] - 0.265, NODE_X_5[-1] + 0.265)
 
-    # the five stages converge into one artifact
-    apex_x, apex_y = NODE_X_5[2], OUT_CARD_Y - 0.16
+    # the five stages merge into one artifact — drawn at DIM weight with a real
+    # merge node, so the diagram reads at presentation distance
+    apex_x, apex_y = NODE_X_5[2], 5.32
     for cx in NODE_X_5:
-        s += [line(cx, BAND_Y + BAND_H + 0.06, apex_x, apex_y, color=RULE)]
-    s += [triangle(apex_x, apex_y + 0.06, 0.14, 0.12, fill=MUTED, rot=10800000)]
+        s += [line(cx, BAND_Y + BAND_H + 0.06, apex_x, apex_y, w=0.020, color=DIM)]
+    s += [ellipse(apex_x - 0.12, apex_y - 0.12, 0.24, fill=BG, line=MUTED, lw=12700)]
+    s += [rect(apex_x - 0.010, apex_y + 0.12, 0.020, 0.32, fill=DIM)]
+    s += [triangle(apex_x, OUT_CARD_Y - 0.08, 0.20, 0.14, fill=MUTED, rot=10800000)]
 
     s += outcome_card(
         "OUTPUT  ·  ONE APPROVED ARTIFACT",
-        "Requirements, scope, cited research, compliance and prior patterns — approved before code.")
+        "Requirements, scope, cited research, compliance and prior patterns. Approved before code.")
     s += [logo("rId3")]
     return s, ["image3.png", "image16.png"]
 
@@ -229,7 +243,7 @@ def slide4():
     s += [text(M, 1.36, 10.28, 0.53, [
         run("The package is approved. ", T_LEAD, MUTED),
         run("Build through Operate", T_LEAD, MUTED, bold=True),
-        run(" — from approved package to software running in production. "
+        run(" takes it from approved package to software running in production. "
             "Every decision that matters stays with a person.", T_LEAD, MUTED),
     ])]
 
@@ -271,7 +285,7 @@ def slide4():
 
     s += outcome_card(
         "OUTPUT  ·  SOFTWARE RUNNING IN PRODUCTION",
-        "Eight stages, one line, a person on every gate — and a library that grows with every build.")
+        "Eight stages, one line, a person on every gate, and a library that grows with every build.")
     s += [logo("rId3")]
     return s, ["image2.png", "image16.png"]
 
@@ -316,17 +330,18 @@ def slide5():
     s += [text(M + cw / 2, 3.82, 2 * (cw + gap), 0.17,
                run("every build feeds the next", T_EYEBROW, MUTED, font=MONO, spc=100),
                align="ctr")]
+    s += [text(M, 4.14, 6.82, 0.42,
+               run("Every project writes validated patterns and documented failures back "
+                   "into the library, and every next build queries it before a line of "
+                   "code is written.", T_STAGE_SUB, MUTED))]
 
     # left — what the library holds
-    s += [hairline(4.20, x=M, w=6.82)]
-    s += [eyebrow(M, 4.38, "THE PATTERN LIBRARY", w=5.0, spc=300)]
+    s += [hairline(4.72, x=M, w=6.82)]
+    s += [eyebrow(M, 4.90, "THE PATTERN LIBRARY", w=5.0, spc=300)]
     for x, w, num, col, label in [(M, 3.30, "Hundreds", TEXT, "validated patterns"),
                                   (4.20, 3.38, "Thousands", ACCENT, "documented anti-patterns")]:
-        s += [text(x, 4.66, w, 0.58, run(num, T_STAT, col))]
-        s += [text(x, 5.32, w, 0.21, run(label, T_LEAD, TEXT))]
-    s += [text(M, 5.88, 6.82, 0.19,
-               run("The LEARN loop from the chain is what fills this library.",
-                   T_STAGE_SUB, MUTED))]
+        s += [text(x, 5.18, w, 0.58, run(num, T_STAT, col))]
+        s += [text(x, 5.84, w, 0.21, run(label, T_LEAD, TEXT))]
 
     # right — why it is defensible
     s += [vrule(7.58, 2.16, 4.00)]
@@ -363,7 +378,7 @@ BUILDS = [
          proof="Paying customer since June 2026, 150 leads per month."),
     dict(rid="rId6", name="Board Member App", status="BUILT", status_col=MUTED,
          sector="Pharma / CDMO · board level",
-         does="Turns a stack of board documents into a cited briefing — a watermarked "
+         does="Turns a stack of board documents into a cited briefing: a watermarked "
               "PDF with a signed audit trail, EU-only.",
          proof_num="158 tests green", proof_col=TEXT,
          proof="Verified end to end. Offered, not yet deployed."),
@@ -403,7 +418,7 @@ def slide6():
 
     s += [hairline(6.38)]
     s += [text(M, 6.56, W, 0.24,
-               run("Three sectors, one chain — the same pipeline produced all three.",
+               run("Three sectors, one chain. The same pipeline produced all three.",
                    T_LEAD, TEXT, bold=True))]
     s += [logo("rId3")]
     return s, ["image2.png", "image16.png", "image13.png", "image14.png", "image15.png"]
@@ -420,40 +435,47 @@ def slide7():
     s += [text(M, 2.28, 11.25, 1.30, [
         run("Which process at your company still runs in ", 3300, TEXT),
         run("Excel", 3300, ACCENT),
-        run(" — and shouldn’t have for the past year?", 3300, TEXT),
+        run(", and shouldn’t have for the past year?", 3300, TEXT),
     ], anchor="t", autofit=False)]
 
     s += [hairline(4.16)]
     s += [eyebrow(M, 4.34, "TWO WAYS THIS GOES", w=6.0, spc=300)]
 
     forks = [
-        (M, "IF ONE THING CAME TO MIND", "We build the application.", TEXT,
+        (M, "We build the application.", TEXT,
          "One process, taken end to end through the chain."),
-        (6.91, "IF TWENTY THINGS CAME TO MIND", "We build the platform.", ACCENT,
-         "Twenty processes — that’s the platform conversation."),
+        (6.91, "We deliver the platform.", ACCENT,
+         "Multiple processes, that’s the platform conversation."),
     ]
-    for x, label, head, col, body in forks:
-        s += [card(x, 4.66, 5.65, 1.50)]
-        s += [micro(x + 0.34, 4.90, label, w=4.97, color=DIM, spc=200)]
-        s += [text(x + 0.34, 5.20, 4.97, 0.31, run(head, 2000, col, bold=True))]
-        s += [text(x + 0.34, 5.66, 4.97, 0.22, run(body, 1100, MUTED))]
+    for x, head, col, body in forks:
+        s += [card(x, 4.66, 5.65, 1.34)]
+        s += [text(x + 0.34, 4.98, 4.97, 0.31, run(head, 2000, col, bold=True))]
+        s += [text(x + 0.34, 5.44, 4.97, 0.22, run(body, 1100, MUTED))]
 
-    s += [hairline(6.44)]
-    s += [text(M, 6.62, 6.0, 0.18,
-               run("ATHENARUN  ·  WE BUILD THE CHAIN, NOT THE GENERATOR",
-                   T_META, DIM, font=MONO, spc=200))]
-    s += [text(7.70, 6.62, 4.86, 0.18,
-               run("[Name · Email · Phone]", T_META, ACCENT, font=MONO), align="r")]
     s += [logo("rId3")]
     return s, ["image2.png", "image16.png"]
 
 
 # --------------------------------------------------------------------------
+# Em dashes on the slides that are otherwise left alone. The en dashes in number
+# ranges ($51–74B, Seed–Series E, 6–7 figure) are correct typography and stay.
+EM_DASH_FIXES = {
+    9: [("<a:t>1% of SAM — </a:t>", "<a:t>1% of SAM. </a:t>"),
+        ("<a:t>open source as the adoption lever.</a:t>",
+         "<a:t>Open source as the adoption lever.</a:t>")],
+    10: [("whole row — and the loop", "whole row, and the loop")],
+    11: [("<a:t> — highly experienced", "<a:t>, highly experienced")],
+    12: [("vetting the company — all before", "vetting the company, all before")],
+}
+
+
 def main():
     if os.path.exists(UNPACKED):
         shutil.rmtree(UNPACKED)
     with zipfile.ZipFile(SRC) as z:
         z.extractall(UNPACKED)
+
+    patch_cover_art()
 
     for n, fn in enumerate([slide1, slide2, slide3, slide4, slide5, slide6, slide7], 1):
         ci.reset_ids()
@@ -462,6 +484,18 @@ def main():
             f.write(slide_xml(shapes))
         with open(f"{UNPACKED}/ppt/slides/_rels/slide{n}.xml.rels", "w", encoding="utf-8") as f:
             f.write(rels_xml(images))
+
+    # Slides 8-12 keep their original layout; only the em dashes come out, so the
+    # whole deck reads in one voice.
+    for n, pairs in EM_DASH_FIXES.items():
+        path = f"{UNPACKED}/ppt/slides/slide{n}.xml"
+        with open(path, encoding="utf-8") as f:
+            xml = f.read()
+        for old, new in pairs:
+            assert old in xml, (n, old)
+            xml = xml.replace(old, new)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(xml)
 
     if os.path.exists(OUT):
         os.remove(OUT)
