@@ -256,8 +256,8 @@ def slide3():
 
     s += outcome_card(
         "OUTPUT  ·  WHAT THIS HAS ALREADY PRODUCED",
-        "Audit-grade output, built and verified. A second system live in production "
-        "since June 2026.")
+        "Audit-grade output, built and verified: signed audit trail, EU-only, "
+        "158 tests green.")
     s += [logo("rId3")]
     return s, ["image3.png", "image16.png"]
 
@@ -276,56 +276,54 @@ DEFENSIBLE = [
 
 
 def slide5():
+    """The founders removed the "why it's defensible" panel, so the compounding
+    loop and the library counts re-flow across the full width instead of leaving
+    the right half of the slide empty next to an orphaned divider."""
     s = [background("rId2")]
     s += header("Our moat.", " Every build makes the next one safer.", "The moat")
-    s += [text(M, 1.40, 6.90, 0.50,
+    s += [text(M, 1.40, W, 0.24,
                run("Anyone can generate code. What compounds is what real production "
                    "builds taught us.", T_LEAD, MUTED))]
 
-    # left — the compounding loop, drawn as a closed cycle
-    s += [eyebrow(M, 2.16, "THE COMPOUNDING LOOP", w=5.0, spc=300)]
-    cw, gap = 2.06, 0.30
+    # the compounding loop, now the full width of the slide
+    s += [eyebrow(M, 2.00, "THE COMPOUNDING LOOP", w=5.0, spc=300)]
+    gap = 0.36
+    cw = (W - 2 * gap) / 3
     for i, (name, sub) in enumerate(CYCLE):
         x = M + i * (cw + gap)
-        s += [card(x, 2.46, cw, 0.92)]
-        s += [text(x, 2.66, cw, 0.28, run(name, 2000, TEXT), align="ctr")]
-        s += [text(x, 3.01, cw, 0.17, run(sub, T_MICRO, MUTED, font=MONO), align="ctr")]
+        s += [card(x, 2.30, cw, 1.00)]
+        s += [text(x, 2.54, cw, 0.28, run(name, 2000, TEXT), align="ctr")]
+        s += [text(x, 2.93, cw, 0.17, run(sub, T_MICRO, MUTED, font=MONO), align="ctr")]
         if i < 2:
-            s += [triangle(x + cw + gap / 2, 2.92, 0.10, 0.12, fill=MUTED, rot=5400000)]
+            s += [triangle(x + cw + gap / 2, 2.80, 0.10, 0.12, fill=MUTED, rot=5400000)]
 
     # the return path: reuse feeds the next build
-    loop_bottom = 3.72
-    s += [rect(M + 2 * (cw + gap) + cw / 2, 3.38, 0.012, loop_bottom - 3.38, fill=ACCENT)]
-    s += [rect(M + cw / 2, loop_bottom, 2 * (cw + gap), 0.012, fill=ACCENT)]
-    s += [rect(M + cw / 2, 3.52, 0.012, loop_bottom - 3.52, fill=ACCENT)]
-    s += [triangle(M + cw / 2 + 0.006, 3.46, 0.12, 0.15)]
-    s += [text(M + cw / 2, 3.82, 2 * (cw + gap), 0.17,
+    first_c, last_c = M + cw / 2, M + 2 * (cw + gap) + cw / 2
+    loop_bottom = 3.66
+    s += [rect(last_c, 3.30, 0.012, loop_bottom - 3.30, fill=ACCENT)]
+    s += [rect(first_c, loop_bottom, last_c - first_c, 0.012, fill=ACCENT)]
+    s += [rect(first_c, 3.44, 0.012, loop_bottom - 3.44, fill=ACCENT)]
+    s += [triangle(first_c + 0.006, 3.38, 0.12, 0.15)]
+    s += [text(first_c, 3.78, last_c - first_c, 0.17,
                run("every build feeds the next", T_EYEBROW, MUTED, font=MONO, spc=100),
                align="ctr")]
-    s += [text(M, 4.14, 6.82, 0.42,
+    s += [text(M, 4.14, W, 0.22,
                run("Every project writes validated patterns and documented failures back "
-                   "into the library, and every next build queries it before a line of "
-                   "code is written.", T_STAGE_SUB, MUTED))]
+                   "into the library. Every next build queries it first.", T_STAGE_SUB, MUTED))]
 
-    # left — what the library holds
-    s += [hairline(4.72, x=M, w=6.82)]
-    s += [eyebrow(M, 4.90, "THE PATTERN LIBRARY", w=5.0, spc=300)]
-    for x, w, num, col, label in [(M, 3.30, "Hundreds", TEXT, "validated patterns"),
-                                  (4.20, 3.38, "Thousands", ACCENT, "documented anti-patterns")]:
-        s += [text(x, 5.18, w, 0.58, run(num, T_STAT, col))]
-        s += [text(x, 5.84, w, 0.21, run(label, T_LEAD, TEXT))]
+    # what the library holds
+    s += [hairline(4.58)]
+    s += [eyebrow(M, 4.76, "THE PATTERN LIBRARY", w=5.0, spc=300)]
+    tw = (W - 0.36) / 2
+    for i, (num, col, label) in enumerate([("Hundreds", TEXT, "validated patterns"),
+                                           ("Thousands", ACCENT, "documented anti-patterns")]):
+        x = M + i * (tw + 0.36)
+        s += [card(x, 5.02, tw, 1.22)]
+        s += [text(x + 0.30, 5.26, tw - 0.60, 0.58, run(num, T_STAT, col))]
+        s += [text(x + 0.30, 5.88, tw - 0.60, 0.21, run(label, T_LEAD, TEXT))]
 
-    # right — why it is defensible
-    s += [vrule(7.58, 2.16, 4.00)]
-    s += [card(7.92, 2.16, 4.64, 4.00)]
-    s += [micro(8.24, 2.46, "WHY IT’S DEFENSIBLE", w=4.03, spc=200)]
-    for i, (head, body) in enumerate(DEFENSIBLE):
-        y = 2.90 + i * 1.10
-        s += [text(8.24, y, 4.00, 0.20, run(head, 1300, ACCENT, bold=True))]
-        s += [text(8.24, y + 0.30, 4.00, 0.44, run(body, 1100, MUTED))]
-
-    s += [hairline(6.36)]
-    s += [text(M, 6.54, W, 0.24,
+    s += [hairline(6.40)]
+    s += [text(M, 6.56, W, 0.24,
                run("The chain fills the library. The library makes the next chain safer. "
                    "That loop is the moat.", T_LEAD, TEXT, bold=True))]
     s += [logo("rId3")]
