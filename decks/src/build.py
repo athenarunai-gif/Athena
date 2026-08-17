@@ -23,8 +23,14 @@ NUM_Y = RAIL_Y - 0.105
 NAME_Y = 3.24
 SUB_Y = 3.49
 LEGEND_Y = 3.92
-BAND_Y, BAND_H = 4.25, 0.34
-OUT_CARD_Y, OUT_CARD_H = 5.72, 0.86
+BAND_Y, BAND_H = 4.36, 0.34
+OUT_CARD_Y, OUT_CARD_H = 5.50, 0.86
+
+# The two chain slides became one, so the deck is eleven slides. Rather than
+# renumber every part, the dropped slide is simply removed from <p:sldIdLst> and
+# the six rebuilt slides are written onto the parts that survive, in order.
+SLIDE_PARTS = [1, 2, 3, 5, 6, 7]
+DROPPED_PART = 4
 
 
 # --------------------------------------------------------------------------
@@ -143,181 +149,117 @@ def slide1():
 
 
 # --------------------------------------------------------------------------
-# slide 2 — the problem
+# slide 2 — why systems are hard, and what that costs
 # --------------------------------------------------------------------------
-STEPS_MANUAL = ["Requirements", "Feasibility", "Compliance", "Approval", "Operations"]
+# The four conditions are exactly the four things the three shipped systems had
+# to solve; none of them is a claim about the customer's own organisation, which
+# is what made "still manual" contestable.
+HARD = [
+    ("Context", "It needs the house rules, the data model and the edge cases. "
+                "A prompt does not carry them."),
+    ("Integration", "It has to live inside ERP, Slack and the document store, "
+                    "not in a sandbox."),
+    ("Verification", "Someone signs the output. That takes tests, calibration "
+                     "and an audit trail."),
+    ("Accountability", "A person owns the decision. That takes gates, not autonomy."),
+]
 
 
 def slide2():
     s = [background("rId2")]
-    s += header("Still manual.", " And that is where the money goes.", "The problem")
+    s += header("Everyone builds tools.", " Systems are the hard part.", "The problem")
+    s += [text(M, 1.42, 10.42, 0.50,
+               run("Code is the cheap part now. What still fails is everything that has "
+                   "to be true before someone signs off on the result.", T_LEAD, MUTED))]
 
-    # band A — the five manual steps that sit around the code
-    s += [eyebrow(M, 1.45, "FIVE STEPS AROUND THE CODE. NOT ONE OF THEM IS CODE",
-                  w=9.0, spc=200)]
-    s += [text(M, 1.74, 10.42, 0.21,
-               run("Every one of them a handoff, a document, a wait.", T_LEAD, MUTED))]
+    s += [hairline(2.10)]
+    s += [eyebrow(M, 2.28, "WHAT SEPARATES A TOOL FROM A SYSTEM", w=6.0, spc=200)]
 
-    rail_y = 2.42
-    s += [hairline(rail_y - 0.006)]
-    for cx, (num, name) in zip(NODE_X_5, enumerate(STEPS_MANUAL, 1)):
-        s += [ellipse(cx - NODE_D / 2, rail_y - NODE_D / 2, NODE_D),
-              text(cx - 0.28, rail_y - 0.105, 0.56, 0.21,
-                   run(f"{num:02d}", 1300, MUTED, font=MONO), align="ctr")]
-        s += [text(cx - 1.11, 2.80, 2.22, 0.24, run(name, T_STAGE, TEXT), align="ctr")]
-        s += [text(cx - 1.11, 3.08, 2.22, 0.15,
-                   run("handoff · document · wait", T_MICRO, DIM, font=MONO),
-                   align="ctr")]
+    cw = (W - 3 * 0.24) / 4
+    for i, (name, body) in enumerate(HARD):
+        x = M + i * (cw + 0.24)
+        s += [card(x, 2.56, cw, 1.95)]
+        s += [text(x + 0.28, 2.86, cw - 0.56, 0.31, run(name, 2000, TEXT))]
+        s += [hairline(3.34, x=x + 0.28, w=cw - 0.56)]
+        s += [text(x + 0.28, 3.50, cw - 0.56, 0.90, run(body, 1100, MUTED),
+                   anchor="t", autofit=False)]
 
-    s += [hairline(3.46)]
+    s += [hairline(4.75)]
 
-    # band B left — what it costs
-    s += [text(M, 4.02, 3.0, 0.90,
+    # the cost, stated as a conclusion rather than a scare statistic
+    s += [card(M, 4.92, W, 1.30)]
+    s += [text(1.10, 5.10, 3.0, 0.90,
                [run("61", T_STAT_XL, ACCENT), run("%", 2400, MUTED)])]
-    s += [text(2.42, 4.20, 4.50, 0.55,
-               run("of organizations see no EBIT impact from AI", T_LEAD, MUTED))]
+    s += [vrule(3.30, 5.14, 0.92, color=RULE)]
+    s += [micro(3.62, 5.20, "OF ORGANIZATIONS SEE NO EBIT IMPACT FROM AI", w=6.0, spc=150)]
+    s += [text(3.62, 5.48, 8.40, 0.30,
+               [run("Pilots are tools, and tools don’t move EBIT. ", T_STAGE, TEXT, bold=True),
+                run("Systems do.", T_STAGE, ACCENT, bold=True)])]
+    s += [micro(3.62, 5.86,
+                "SOURCE: MCKINSEY, THE STATE OF AI IN 2025. 39% ATTRIBUTE ANY EBIT IMPACT TO AI",
+                w=8.40, color=DIM, spc=100)]
 
-    # 100-dot waffle: the 61 / 39 split behind the headline number
-    d, pitch = 0.105, 0.155
-    for i in range(100):
-        col, row = i % 20, i // 20
-        s += [dot(M + 0.05 + col * pitch, 5.16 + row * pitch, d,
-                  ACCENT if i < 61 else RULE)]
-    s += [text(M, 5.92, 6.0, 0.15, [
-        run("61 NO EBIT IMPACT", T_MICRO, ACCENT, font=MONO, spc=100),
-        run("     39 ANY EBIT IMPACT", T_MICRO, DIM, font=MONO, spc=100),
-    ])]
-
-    # band B right — the so-what
-    s += [card(7.10, 3.92, 5.46, 2.22)]
-    s += [micro(7.44, 4.16, "WHERE THE MONEY GOES", w=4.78, spc=200)]
-    s += [text(7.44, 4.46, 4.78, 0.72,
-               run("The expensive failures happen before a line of code.",
-                   2000, TEXT, bold=True))]
-    s += [text(7.44, 5.30, 4.78, 0.24,
-               run("That’s the part we automate.", T_SOWHAT, ACCENT, bold=True))]
-    cx = 7.44
-    for label, rid, cw in [("HANDOFF", "rId4", 1.45), ("DOCUMENT", "rId5", 1.55),
-                           ("WAIT", "rId6", 1.15)]:
-        s += [rect(cx, 5.70, cw, 0.32, fill=BG, line=RULE)]
-        s += [pic(cx + 0.15, 5.79, 0.15, 0.15, rid)]
-        s += [micro(cx + 0.38, 5.805, label, w=cw - 0.50, color=MUTED, spc=100)]
-        cx += cw + 0.16
-
-    # footer
-    s += [hairline(6.30)]
-    s += [text(M, 6.50, 9.0, 0.17,
-               run("Source: McKinsey, The State of AI in 2025. 39% attribute any EBIT impact to AI",
-                   T_META, DIM, font=MONO))]
     s += [logo("rId3")]
-    return s, ["image2.png", "image16.png", "image10.png", "image11.png", "image12.png"]
+    return s, ["image2.png", "image16.png"]
 
 
 # --------------------------------------------------------------------------
-# slide 3 — the chain, stages 01-05
+# slide 3 — the chain, told as deliverables
 # --------------------------------------------------------------------------
-CHAIN_A = [("Discover", "from conversation"), ("Analyze", "scope + fit"),
-           ("Research", "cited, deep"), ("Compliance", "pre-build gate"),
-           ("AI Memory", "patterns carried in")]
+# One slide instead of two, and the columns are what the customer receives, not
+# the stage that produced it. The eight stage names survive as mono captions.
+CHAIN = [
+    ("Scoped spec", "DISCOVER · ANALYZE", "requirements and fit"),
+    ("Cited research", "RESEARCH", "sources you can check"),
+    ("Compliance gate", "COMPLIANCE", "signed before any code"),
+    ("Reviewed build", "AI MEMORY · BUILD", "applied and reviewed"),
+    ("Running system", "RELEASE · OPERATE", "released and monitored"),
+]
 
 
 def slide3():
     s = [background("rId2")]
-    s += header("From idea to build-ready package.", "", "The chain")
-    s += [text(M, 1.36, 10.28, 0.53, [
-        run("One line, a human gate at every step. AI agents support every stage, ",
-            T_LEAD, MUTED),
-        run("Discover through AI Memory", T_LEAD, MUTED, bold=True),
-        run(". From first conversation to a build-ready package.", T_LEAD, MUTED),
-    ])]
+    s += header("What you get.", " And where you can stop.", "The chain")
+    s += [text(M, 1.40, 10.28, 0.50,
+               run("AI agents run every stage, a person opens every gate. Five deliverables "
+                   "on the way to a finished application, and no build budget moves without "
+                   "a human yes.", T_LEAD, MUTED))]
 
-    s += from_to("FROM  ·  FIRST CONVERSATION", "TO  ·  BUILD-READY PACKAGE")
+    s += from_to("FROM  ·  FIRST CONVERSATION", "TO  ·  A FINISHED APPLICATION")
 
-    # the rail
+    # the rail: five deliverables, gates between them
     s += [hairline(RAIL_Y - 0.006)]
-    for cx, (num, (name, sub)) in zip(NODE_X_5, enumerate(CHAIN_A, 1)):
-        s += rail_node(cx, f"{num:02d}")
-        s += rail_stage(cx, name, sub)
+    for i, (cx, (name, stages, sub)) in enumerate(zip(NODE_X_5, CHAIN), start=1):
+        s += rail_node(cx, f"{i:02d}")
+        s += [text(cx - 1.11, 3.14, 2.22, 0.24, run(name, T_STAGE, TEXT), align="ctr")]
+        s += [text(cx - 1.11, 3.44, 2.22, 0.18, run(sub, T_STAGE_SUB, MUTED), align="ctr")]
+        s += [micro(cx - 1.11, 3.68, stages, w=2.22, color=DIM, align="ctr", spc=100)]
     for i in range(4):
         s += [diamond((NODE_X_5[i] + NODE_X_5[i + 1]) / 2, RAIL_Y)]
 
-    s += gate_legend()
-    s += ai_band(NODE_X_5[0] - 0.265, NODE_X_5[-1] + 0.265)
+    # the gates, stated as the buyer's exit rather than as our process step
+    s += [diamond(M + 0.05, 4.09)]
+    s += [text(M + 0.22, 4.02, 6.4, 0.18,
+               run("YOU CAN STOP AT ANY GATE, BEFORE BUILD BUDGET MOVES",
+                   T_EYEBROW, ACCENT, font=MONO, spc=150))]
 
-    # the five stages merge into one artifact — drawn at DIM weight with a real
-    # merge node, so the diagram reads at presentation distance
-    apex_x, apex_y = NODE_X_5[2], 5.32
+    s += ai_band(NODE_X_5[0] - 0.265, NODE_X_5[-1] + 0.265,
+                 "AI AGENTS RUN EVERY STAGE")
+
+    # the five deliverables merge into one finished application
+    apex_x, apex_y = NODE_X_5[2], 5.14
     for cx in NODE_X_5:
         s += [line(cx, BAND_Y + BAND_H + 0.06, apex_x, apex_y, w=0.020, color=DIM)]
     s += [ellipse(apex_x - 0.12, apex_y - 0.12, 0.24, fill=BG, line=MUTED, lw=12700)]
-    s += [rect(apex_x - 0.010, apex_y + 0.12, 0.020, 0.32, fill=DIM)]
+    s += [rect(apex_x - 0.010, apex_y + 0.12, 0.020, 0.20, fill=DIM)]
     s += [triangle(apex_x, OUT_CARD_Y - 0.08, 0.20, 0.14, fill=MUTED, rot=10800000)]
 
     s += outcome_card(
-        "OUTPUT  ·  ONE APPROVED ARTIFACT",
-        "Requirements, scope, cited research, compliance and prior patterns. Approved before code.")
+        "OUTPUT  ·  WHAT THIS HAS ALREADY PRODUCED",
+        "Audit-grade output, built and verified. A second system live in production "
+        "since June 2026.")
     s += [logo("rId3")]
     return s, ["image3.png", "image16.png"]
-
-
-# --------------------------------------------------------------------------
-# slide 4 — the chain, stages 06-08 and the LEARN loop
-# --------------------------------------------------------------------------
-CHAIN_B = [("Build", "code + review"), ("Release", "human approval"),
-           ("Operate", "monitoring")]
-
-
-def slide4():
-    s = [background("rId2")]
-    s += header("From package to running software.", "", "The chain")
-    s += [text(M, 1.36, 10.28, 0.53, [
-        run("The package is approved. ", T_LEAD, MUTED),
-        run("Build through Operate", T_LEAD, MUTED, bold=True),
-        run(" takes it from approved package to software running in production. "
-            "Every decision that matters stays with a person.", T_LEAD, MUTED),
-    ])]
-
-    s += from_to("FROM  ·  BUILD-READY PACKAGE", "TO  ·  SOFTWARE IN PRODUCTION")
-
-    # carried-over stub for stage 05
-    s += [rect(1.04, RAIL_Y - 0.006, 2.08, 0.012, fill=RULE)]
-    for x in (0.99, 1.51, 2.03, 2.56, 3.08):
-        s += [shape("ellipse", x, RAIL_Y - 0.05, 0.10, 0.10, BG, DIM, 12700)]
-    s += [micro(M, RAIL_Y + 0.22, "05 · BUILD-READY PACKAGE", w=2.64, color=DIM,
-                align="ctr", spc=100)]
-
-    # the rail
-    s += [rect(3.61, RAIL_Y - 0.006, RIGHT - 3.61, 0.012, fill=RULE)]
-    s += [diamond(3.66, RAIL_Y)]
-    for cx, (num, (name, sub)) in zip(NODE_X_3, enumerate(CHAIN_B, 6)):
-        s += rail_node(cx, f"{num:02d}")
-        s += rail_stage(cx, name, sub)
-    for i in range(2):
-        s += [diamond((NODE_X_3[i] + NODE_X_3[i + 1]) / 2, RAIL_Y)]
-
-    s += gate_legend()
-    s += ai_band(NODE_X_3[0] - 0.265, NODE_X_3[-1] + 0.265)
-
-    # the LEARN loop — the return path that feeds stage 05 on the previous slide
-    loop_y, loop_x = 5.20, 2.08
-    right_x = NODE_X_3[-1] + 0.265
-    s += [rect(right_x, BAND_Y + BAND_H, 0.012, loop_y - (BAND_Y + BAND_H), fill=ACCENT)]
-    s += [rect(loop_x, loop_y, right_x - loop_x, 0.012, fill=ACCENT)]
-    s += [rect(loop_x, RAIL_Y + 0.62, 0.012, loop_y - (RAIL_Y + 0.62), fill=ACCENT)]
-    s += [triangle(loop_x + 0.006, RAIL_Y + 0.55, 0.12, 0.15)]
-    # label sits on the return path and interrupts it, so the loop reads as a
-    # routed connection rather than a closed box
-    s += [rect(3.86, loop_y - 0.16, 5.60, 0.34, fill=BG)]
-    s += [text(3.86, loop_y - 0.07, 5.60, 0.18, [
-        run("LEARN", T_EYEBROW, ACCENT, font=MONO, spc=200),
-        run("  ·  every build teaches the next", T_EYEBROW, MUTED, font=MONO, spc=100),
-    ], align="ctr")]
-
-    s += outcome_card(
-        "OUTPUT  ·  SOFTWARE RUNNING IN PRODUCTION",
-        "Eight stages, one line, a person on every gate, and a library that grows with every build.")
-    s += [logo("rId3")]
-    return s, ["image2.png", "image16.png"]
 
 
 # --------------------------------------------------------------------------
@@ -463,9 +405,9 @@ def slide7():
     s += [text(M, 1.60, 9.72, 0.22,
                run("I’ll leave you with a question, not a brochure.", T_LEAD, MUTED))]
     s += [text(M, 2.28, 11.25, 1.30, [
-        run("Which process at your company still runs in ", 3300, TEXT),
-        run("Excel", 3300, ACCENT),
-        run(", and shouldn’t have for the past year?", 3300, TEXT),
+        run("Which system would you rebuild today if delivery took ", 3300, TEXT),
+        run("twelve weeks", 3300, ACCENT),
+        run(" instead of two years?", 3300, TEXT),
     ], anchor="t", autofit=False)]
 
     s += [hairline(4.16)]
@@ -473,9 +415,9 @@ def slide7():
 
     forks = [
         (M, "We build the application.", TEXT,
-         "One process, taken end to end through the chain."),
+         "One system, taken end to end."),
         (6.91, "We deliver the platform.", ACCENT,
-         "Multiple processes, that’s the platform conversation."),
+         "Multiple systems, that’s the platform conversation."),
     ]
     for x, head, col, body in forks:
         s += [card(x, 4.66, 5.65, 1.34)]
@@ -484,6 +426,58 @@ def slide7():
 
     s += [logo("rId3")]
     return s, ["image2.png", "image16.png"]
+
+
+# --------------------------------------------------------------------------
+def prune_media():
+    """Delete media no longer referenced by any part. The three friction icons on
+    the old problem slide went out with its chip row, and PowerPoint reports an
+    orphaned part as a corrupt file."""
+    media_dir = f"{UNPACKED}/ppt/media"
+    referenced = set()
+    for root, _, files in os.walk(UNPACKED):
+        for name in files:
+            if not name.endswith(".rels"):
+                continue
+            body = open(os.path.join(root, name), encoding="utf-8").read()
+            for asset in os.listdir(media_dir):
+                if asset in body:
+                    referenced.add(asset)
+    for asset in sorted(set(os.listdir(media_dir)) - referenced):
+        os.remove(os.path.join(media_dir, asset))
+        print("pruned unused media:", asset)
+
+
+def drop_slide(part):
+    """Take a slide out of the presentation order and delete everything that then
+    hangs loose: the slide part, its rels, its content-type override and the
+    relationship the presentation used to reach it."""
+    import re
+
+    pres = f"{UNPACKED}/ppt/presentation.xml"
+    rels = f"{UNPACKED}/ppt/_rels/presentation.xml.rels"
+    types = f"{UNPACKED}/[Content_Types].xml"
+
+    rx = open(rels, encoding="utf-8").read()
+    m = re.search(r'<Relationship Id="(rId\d+)"[^>]*?Target="slides/slide%d\.xml"[^>]*?/>' % part, rx)
+    assert m, f"no relationship for slide{part}.xml"
+    rid, rel_tag = m.group(1), m.group(0)
+
+    px = open(pres, encoding="utf-8").read()
+    sld = re.search(r'<p:sldId id="\d+" r:id="%s"/>' % rid, px)
+    assert sld, f"slide{part}.xml is not in the presentation order"
+    open(pres, "w", encoding="utf-8").write(px.replace(sld.group(0), ""))
+    open(rels, "w", encoding="utf-8").write(rx.replace(rel_tag, ""))
+
+    tx = open(types, encoding="utf-8").read()
+    ov = re.search(r'<Override PartName="/ppt/slides/slide%d\.xml"[^>]*?/>' % part, tx)
+    assert ov, f"no content-type override for slide{part}.xml"
+    open(types, "w", encoding="utf-8").write(tx.replace(ov.group(0), ""))
+
+    os.remove(f"{UNPACKED}/ppt/slides/slide{part}.xml")
+    rp = f"{UNPACKED}/ppt/slides/_rels/slide{part}.xml.rels"
+    if os.path.exists(rp):
+        os.remove(rp)
 
 
 # --------------------------------------------------------------------------
@@ -507,13 +501,16 @@ def main():
 
     patch_cover_art()
 
-    for n, fn in enumerate([slide1, slide2, slide3, slide4, slide5, slide6, slide7], 1):
+    for n, fn in zip(SLIDE_PARTS, [slide1, slide2, slide3, slide5, slide6, slide7]):
         ci.reset_ids()
         shapes, images = fn()
         with open(f"{UNPACKED}/ppt/slides/slide{n}.xml", "w", encoding="utf-8") as f:
             f.write(slide_xml(shapes))
         with open(f"{UNPACKED}/ppt/slides/_rels/slide{n}.xml.rels", "w", encoding="utf-8") as f:
             f.write(rels_xml(images))
+
+    drop_slide(DROPPED_PART)
+    prune_media()
 
     # Slides 8-12 keep their original layout; only the em dashes come out, so the
     # whole deck reads in one voice.
