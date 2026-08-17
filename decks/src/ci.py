@@ -183,6 +183,22 @@ def background(rid="rId2"):
     return pic(0, 0, 13.333, 7.5, rid, name="Picture 1")
 
 
+def backdrop():
+    """The dark ground as a real shape instead of a full-bleed bitmap.
+
+    The original artwork's backdrop is a flat 0E0E11 plus a 44px dot grid in
+    151518 — seven levels of luminance on 0.19% of the pixels. A filled rectangle
+    reproduces everything except that texture, and keeps the slide free of images.
+    """
+    return rect(0, 0, 13.3333, 7.5, fill=BG)
+
+
+# The cover artwork also carried two frame rules, lighter and thinner than the
+# section rules used on the content slides. Positions measured off the bitmap.
+COVER_RULE_COLOR = "1F1F22"
+COVER_RULE_Y = (1.000, 6.431)
+
+
 def logo(rid="rId3"):
     return pic(*LOGO, rid, name="Logo")
 

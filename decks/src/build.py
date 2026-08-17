@@ -31,6 +31,7 @@ OUT_CARD_Y, OUT_CARD_H = 5.50, 0.86
 # the six rebuilt slides are written onto the parts that survive, in order.
 SLIDE_PARTS = [1, 2, 3, 5, 6, 7]
 DROPPED_PART = 4
+ORIGINAL_PARTS = [8, 9, 10, 11, 12]
 
 
 # --------------------------------------------------------------------------
@@ -114,21 +115,6 @@ COVER_SUB = ("Enterprise-grade means integrated, tested, audit-proof and "
 COVER_THESIS = "We deliver the finished application."
 
 
-def patch_cover_art():
-    """The whole cover headline is baked into the background artwork. Lift it out
-    of the bitmap so the claim can be rewritten: the dotted backdrop is perfectly
-    flat and periodic on a 44 px grid, so tiling one clean strip across the text
-    band leaves no seam. Everything above y=348 (the top rule) and below y=700 is
-    untouched."""
-    from PIL import Image
-    src = f"{UNPACKED}/ppt/media/image1.png"
-    im = Image.open(src).convert("RGB")
-    strip = im.crop((0, 744, im.width, 788))       # 744 % 44 == 40
-    for y in range(348, 700, 44):                  # 348 % 44 == 40, so the grid lines up
-        im.paste(strip, (0, y))
-    im.save(src)
-
-
 def slide1():
     """Cover, fully live text: the claim moves from process ("the chain") to
     outcome ("the finished application")."""
@@ -140,12 +126,17 @@ def slide1():
 
     y = 2.708 - 0.136 * scale
     lead = HERO_LEAD * scale
-    s = [background("rId2")]
+    s = [backdrop()]
+    for ry in COVER_RULE_Y:
+        s += [hairline(ry, color=COVER_RULE_COLOR)]
     s += [text(0.77, y, 12.0, 0.80 * scale, run(line1, size, TEXT, bold=True))]
     s += [text(0.77, y + lead, 12.0, 0.80 * scale, run(line2, size, MUTED))]
     s += [text(0.77, COVER_SUB_Y, 11.00, 0.24, run(COVER_SUB, T_STAGE, COVER_SUB_COLOR))]
     s += [text(M, 5.02, 9.0, 0.28, run(COVER_THESIS, T_STAGE, ACCENT, bold=True))]
-    return s, ["image1.png"]
+    # the cover wore a larger logo than the content slides; placed so the glyphs
+    # land exactly where the artwork had them
+    s += [pic(0.660, 6.521, 1.775, 0.418, "rId2", name="Logo")]
+    return s, ["image16.png"]
 
 
 # --------------------------------------------------------------------------
@@ -166,7 +157,7 @@ HARD = [
 
 
 def slide2():
-    s = [background("rId2")]
+    s = [backdrop()]
     s += header("Everyone builds tools.", " Systems are the hard part.", "The problem")
     s += [text(M, 1.42, 10.42, 0.50,
                run("Code is the cheap part now. What still fails is everything that has "
@@ -199,8 +190,8 @@ def slide2():
                 "SOURCE: MCKINSEY, THE STATE OF AI IN 2025. 39% ATTRIBUTE ANY EBIT IMPACT TO AI",
                 w=8.40, color=DIM, spc=100)]
 
-    s += [logo("rId3")]
-    return s, ["image2.png", "image16.png"]
+    s += [logo("rId2")]
+    return s, ["image16.png"]
 
 
 # --------------------------------------------------------------------------
@@ -218,7 +209,7 @@ CHAIN = [
 
 
 def slide3():
-    s = [background("rId2")]
+    s = [backdrop()]
     s += header("What you get.", " And where you can stop.", "The chain")
     s += [text(M, 1.40, 10.28, 0.50,
                run("AI agents run every stage, a person opens every gate. Five deliverables "
@@ -258,8 +249,8 @@ def slide3():
         "OUTPUT  ·  WHAT THIS HAS ALREADY PRODUCED",
         "Audit-grade output, built and verified: signed audit trail, EU-only, "
         "158 tests green.")
-    s += [logo("rId3")]
-    return s, ["image3.png", "image16.png"]
+    s += [logo("rId2")]
+    return s, ["image16.png"]
 
 
 # --------------------------------------------------------------------------
@@ -279,7 +270,7 @@ def slide5():
     """The founders removed the "why it's defensible" panel, so the compounding
     loop and the library counts re-flow across the full width instead of leaving
     the right half of the slide empty next to an orphaned divider."""
-    s = [background("rId2")]
+    s = [backdrop()]
     s += header("Our moat.", " Every build makes the next one safer.", "The moat")
     s += [text(M, 1.40, W, 0.24,
                run("Anyone can generate code. What compounds is what real production "
@@ -326,27 +317,27 @@ def slide5():
     s += [text(M, 6.56, W, 0.24,
                run("The chain fills the library. The library makes the next chain safer. "
                    "That loop is the moat.", T_LEAD, TEXT, bold=True))]
-    s += [logo("rId3")]
-    return s, ["image4.png", "image16.png"]
+    s += [logo("rId2")]
+    return s, ["image16.png"]
 
 
 # --------------------------------------------------------------------------
 # slide 6 — what we have built
 # --------------------------------------------------------------------------
 BUILDS = [
-    dict(rid="rId4", name="CFO Suite", status="BUILT", status_col=MUTED,
+    dict(rid="rId3", name="CFO Suite", status="BUILT", status_col=MUTED,
          sector="SME financing · corporate finance",
          does="Reads a company’s financials and returns a bank-grade credit rating, "
               "default probability and pricing as a finished PDF.",
          proof_num="Bank scorecard", proof_col=TEXT,
          proof="Calibrated against a real one. Repositioning to pay-per-use."),
-    dict(rid="rId5", name="Baru", status="LIVE", status_col=ACCENT,
+    dict(rid="rId4", name="Baru", status="LIVE", status_col=ACCENT,
          sector="B2B sales · outbound acquisition",
          does="Finds and qualifies B2B leads, drafts the outreach, and routes every "
               "send through a Slack approval.",
          proof_num="€90 / month", proof_col=ACCENT,
          proof="Paying customer since June 2026, 150 leads per month."),
-    dict(rid="rId6", name="Board Member App", status="BUILT", status_col=MUTED,
+    dict(rid="rId5", name="Board Member App", status="BUILT", status_col=MUTED,
          sector="Pharma / CDMO · board level",
          does="Turns a stack of board documents into a cited briefing: a watermarked "
               "PDF with a signed audit trail, EU-only.",
@@ -356,7 +347,7 @@ BUILDS = [
 
 
 def slide6():
-    s = [background("rId2")]
+    s = [backdrop()]
     s += header("What we’ve built.", " Three systems, three problems.", "Builds")
     s += [text(M, 1.44, 9.90, 0.26,
                run("Three systems taken end to end through the chain.", T_LEAD, MUTED))]
@@ -390,15 +381,15 @@ def slide6():
     s += [text(M, 6.56, W, 0.24,
                run("Three sectors, one chain. The same pipeline produced all three.",
                    T_LEAD, TEXT, bold=True))]
-    s += [logo("rId3")]
-    return s, ["image2.png", "image16.png", "image13.png", "image14.png", "image15.png"]
+    s += [logo("rId2")]
+    return s, ["image16.png", "image13.png", "image14.png", "image15.png"]
 
 
 # --------------------------------------------------------------------------
 # slide 7 — the closing question
 # --------------------------------------------------------------------------
 def slide7():
-    s = [background("rId2")]
+    s = [backdrop()]
     s += header("One question.", "", "One question")
     s += [text(M, 1.60, 9.72, 0.22,
                run("I’ll leave you with a question, not a brochure.", T_LEAD, MUTED))]
@@ -422,11 +413,57 @@ def slide7():
         s += [text(x + 0.34, 4.98, 4.97, 0.31, run(head, 2000, col, bold=True))]
         s += [text(x + 0.34, 5.44, 4.97, 0.22, run(body, 1100, MUTED))]
 
-    s += [logo("rId3")]
-    return s, ["image2.png", "image16.png"]
+    s += [logo("rId2")]
+    return s, ["image16.png"]
 
 
 # --------------------------------------------------------------------------
+def native_backdrop(part):
+    """Swap the full-bleed backdrop bitmap on an untouched slide for a filled
+    rectangle, so no slide in the deck depends on a background image. The bitmap
+    contributes nothing but the flat ground and an all but invisible dot grid."""
+    import re
+
+    path = f"{UNPACKED}/ppt/slides/slide{part}.xml"
+    xml = open(path, encoding="utf-8").read()
+    m = re.search(r'<p:pic>(?:(?!</p:pic>).)*?name="Picture 1"(?:(?!</p:pic>).)*?</p:pic>',
+                  xml, re.S)
+    assert m, f"slide{part}.xml has no backdrop picture"
+    rid = re.search(r'r:embed="(rId\d+)"', m.group(0)).group(1)
+
+    ci._uid[0] = 900 + part * 10          # keep clear of the slide's own shape ids
+    open(path, "w", encoding="utf-8").write(xml.replace(m.group(0), backdrop()))
+
+    rels_path = f"{UNPACKED}/ppt/slides/_rels/slide{part}.xml.rels"
+    rx = open(rels_path, encoding="utf-8").read()
+    rel = re.search(r'<Relationship Id="%s"[^>]*?/>' % rid, rx)
+    assert rel, f"no relationship {rid} on slide{part}"
+    open(rels_path, "w", encoding="utf-8").write(rx.replace(rel.group(0), ""))
+
+
+def prune_dangling_rels():
+    """Drop image relationships that no shape on the slide embeds. The source deck
+    carried four of these on the later slides, about 100 KB each, declared but
+    unreachable."""
+    import re
+
+    for name in sorted(os.listdir(f"{UNPACKED}/ppt/slides")):
+        if not name.endswith(".xml"):
+            continue
+        xml = open(f"{UNPACKED}/ppt/slides/{name}", encoding="utf-8").read()
+        used = set(re.findall(r'r:(?:embed|link)="(rId\d+)"', xml))
+        rels_path = f"{UNPACKED}/ppt/slides/_rels/{name}.rels"
+        rx = open(rels_path, encoding="utf-8").read()
+        out = rx
+        for tag, rid in re.findall(
+                r'(<Relationship Id="(rId\d+)"[^>]*?/relationships/image"[^>]*?/>)', rx):
+            if rid not in used:
+                out = out.replace(tag, "")
+                print(f"dropped dangling image rel {rid} on {name}")
+        if out != rx:
+            open(rels_path, "w", encoding="utf-8").write(out)
+
+
 def prune_media():
     """Delete media no longer referenced by any part. The three friction icons on
     the old problem slide went out with its chip row, and PowerPoint reports an
@@ -497,8 +534,6 @@ def main():
     with zipfile.ZipFile(SRC) as z:
         z.extractall(UNPACKED)
 
-    patch_cover_art()
-
     for n, fn in zip(SLIDE_PARTS, [slide1, slide2, slide3, slide5, slide6, slide7]):
         ci.reset_ids()
         shapes, images = fn()
@@ -508,6 +543,9 @@ def main():
             f.write(rels_xml(images))
 
     drop_slide(DROPPED_PART)
+    for part in ORIGINAL_PARTS:
+        native_backdrop(part)
+    prune_dangling_rels()
     prune_media()
 
     # Slides 8-12 keep their original layout; only the em dashes come out, so the
