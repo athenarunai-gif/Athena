@@ -61,7 +61,7 @@ const doc = new Document({
       new Paragraph({
         spacing: { after: 40 },
         children: [new TextRun({
-          text: "Fassung zum überarbeiteten Deck (11 Folien) · ca. 6:10",
+          text: "Fassung zum überarbeiteten Deck (11 Folien) · ca. 6:15",
           size: 21, color: "44444A" })],
       }),
       new Paragraph({
@@ -82,27 +82,28 @@ const doc = new Document({
       say("Ein Konzern. Zwölf Gesellschaften. Das Reporting läuft seit 2015 — und es läuft gut. Gebaut für zwölf Gesellschaften, deutsches Recht, einen Standard."),
       pause("//"),
       say("Dann kommen neue gesetzliche Anforderungen. Neue Kennzahlen. Neue Prüftiefe."),
-      say("Das System kann es nicht. Der Hersteller sagt: nächstes Major-Release, frühestens 2027. Der Kollege, der die Logik gebaut hat, ist 2023 gegangen."),
+      say("Das System kann es nicht. Der Hersteller sagt: nächstes Major-Release, frühestens 2027."),
 
       // ------------------------------------------------------------------
-      beat("0:45 · Der Prüfer (50 Sek.)"),
-      say("Also läuft es daneben. In Excel. Mit einem Sammelpostfach für die Freigaben."),
+      beat("0:45 · Compliance (50 Sek.)"),
+      say("Also läuft es daneben. Ein Sammelpostfach für die Freigaben, eine Excel-Datei für die Zahlen."),
       pause("//"),
       say("Und dann fragt der Prüfer: Wer hat was wann freigegeben?"),
       pause("///"),
+      say("Niemand kann die Frage beantworten. Nicht weil geschludert wurde, sondern weil die Freigabe nie festgehalten wurde, als sie passiert ist."),
+      say("Der Kollege, der die Freigabelogik gebaut hat, ist 2023 gegangen. Mit ihm die einzige vollständige Fassung der Anforderung. Sie stand nirgends. Sie stand in seinem Kopf und im Code."),
+      pause("//"),
       say("Das System ist nicht schlecht. Es ist von 2015. Der Prozess ist gewachsen — das Werkzeug nicht."),
       pause("//"),
-      say("Und mit dem Kollegen ist nicht nur ein Mitarbeiter gegangen. Mit ihm ist die einzige vollständige Fassung der Anforderung gegangen. Sie stand nirgends. Sie stand in seinem Kopf und im Code."),
-      pause("//"),
-      say("Deshalb erklären Ihre Leute dieselbe Sache zum vierten Mal. Das liegt nicht an Ihren Leuten."),
-      pause("//"),
-      say("Ihre Systeme haben Daten. Ihr Prozess hat kein Gedächtnis."),
+      say("Und Compliance war nie Teil dieses Prozesses. Compliance war eine Prüfung am Ende."),
 
       // ------------------------------------------------------------------
-      beat("1:35 · Warum KI das nicht löst (55 Sek.)"),
+      beat("1:35 · Warum KI das nicht löst (60 Sek.)"),
       say("Und jetzt kommt KI. Und löst das erst mal nicht."),
       pause("//"),
       say("Rund die Hälfte aller KI-Prototypen wird auf dem Weg in den Betrieb wieder eingestampft. Nicht weil das Modell zu schwach war."),
+      pause("//"),
+      say("Das erste Gespräch kennt die Anforderung. Die Entwicklung kennt sie vom Hörensagen. Deshalb erklären Ihre Leute dieselbe Sache zum vierten Mal, und das liegt nicht an Ihren Leuten."),
       pause("//"),
       say("Ein Werkzeug baut heute jeder in einer Stunde. Ein System braucht vier Dinge, die kein Prompt mitbringt."),
       say("Es muss Ihre Regeln kennen. Es muss in Ihren Systemen leben, nicht daneben. Es muss beweisen können, was es getan hat. Und ein Mensch muss dafür geradestehen."),
@@ -113,7 +114,7 @@ const doc = new Document({
       say("Und Sie denken jetzt vielleicht: noch eine Prompt-to-App-Bude. — Ja. Nennen Sie uns so. Mit einem Unterschied: Die liefert Ihnen einen Prototyp. Wir liefern Ihnen etwas, das der Prüfer akzeptiert."),
 
       // ------------------------------------------------------------------
-      beat("2:30 · Was bei Ihnen liegt (70 Sek.)"),
+      beat("2:35 · Was bei Ihnen liegt (70 Sek.)"),
       say("Was Sie dafür bekommen. Nicht wie wir arbeiten — was am Ende bei Ihnen liegt."),
       pause("//"),
       say("Zuerst drei Dokumente. Bevor ein Euro in Entwicklung geht."),
@@ -128,15 +129,15 @@ const doc = new Document({
       say("Wenn der Prüfer dann fragt: Wer hat was wann freigegeben? — dann ist das keine Suche mehr. Das ist eine Abfrage."),
 
       // ------------------------------------------------------------------
-      beat("3:40 · Das Gedächtnis (35 Sek.)"),
+      beat("3:45 · Das Gedächtnis (35 Sek.)"),
       say("Und keiner unserer Builds fängt bei null an."),
       say("Dreihunderteinundfünfzig bewährte Muster, die wir in jedem Projekt wiederverwenden. Zweitausendvierundsechzig Fehler, die wir schon kennen und deshalb nicht mehr machen."),
       pause("//"),
-      say("Ihre Systeme haben Daten, Ihr Prozess hat kein Gedächtnis. Das hier ist das Gedächtnis."),
+      say("Ihre Systeme haben Daten. Ihr Prozess hat kein Gedächtnis. Das hier ist das Gedächtnis."),
       say("Es wächst mit jedem Projekt. Auch mit Ihrem."),
 
       // ------------------------------------------------------------------
-      beat("4:15 · Das läuft schon (35 Sek.)"),
+      beat("4:20 · Das läuft schon (35 Sek.)"),
       say("Was davon heute existiert."),
       say("Die Lead-Generierung läuft seit August beim zahlenden Kunden. Echter Produktivbetrieb."),
       say("Die CFO-Analyse ist gebaut und gegen eine echte Bank-Scorecard kalibriert. Kreditanalyse, Finanzierbarkeit."),
@@ -145,7 +146,7 @@ const doc = new Document({
       say("Drei Bereiche, die nichts miteinander zu tun haben. Dieselbe Kette hat alle drei gebaut."),
 
       // ------------------------------------------------------------------
-      beat("4:50 · Die Frage zurück (80 Sek.)"),
+      beat("4:55 · Die Frage zurück (80 Sek.)"),
       say("Eine Sache noch."),
       say("Ich habe Sie am Anfang etwas gefragt. Welches System bei Ihnen heute etwas nicht kann, das es können müsste."),
       say("Sie haben an eines gedacht. Es ist Ihnen sofort eingefallen — das ist der Punkt."),
@@ -166,28 +167,33 @@ const doc = new Document({
         spacing: { after: 160 },
         children: [new TextRun({ text: "Was sich gegenüber Pitch3 geändert hat", bold: true, size: 26 })],
       }),
-      note("Der Prüfer-Bogen, die Bookend-Frage und der Konzern mit den zwölf Gesellschaften bleiben unangetastet. Das ist der stärkste Teil und er trägt den ganzen Pitch."),
-      note("1:35 — aus „Warum KI daran scheitert“ wird die Tool-gegen-System-Argumentation des neuen Decks: erst die eingestampften Prototypen, dann die vier Bedingungen (Regeln kennen, in Ihren Systemen leben, beweisen können, dafür geradestehen), dann die CEO-Zahl als Folgerung statt als Einstieg."),
-      note("1:35 — die Prompt-to-App-Antwort behält den Ton, aber der Unterschied ist jetzt materiell: nicht „eine Prüfkette“, sondern etwas, das der Prüfer akzeptiert. Das Deck sagt auf dem Cover, dass KI keine fertigen Anwendungen liefert; die Kategorie einfach zu bejahen würde dem widersprechen."),
-      note("2:30 — aus „Zwei Hälften“ wird „Was bei Ihnen liegt“. Die drei Dokumente standen vorher mitten im Absatz und sind jetzt der Einstieg. Neu ist der Satz zum Ausstieg an jedem Übergang, der die Gate-Aussage der Chain-Folie spiegelt."),
-      note("3:40 — die 351 Muster und 2.064 Fehler bleiben, bekommen aber den Rückbezug auf „Ihr Prozess hat kein Gedächtnis“. Damit zahlt die beste Zeile des Pitches zweimal ein."),
-      note("4:15 — „Drei Dinge laufen heute“ ist raus. Es laufen nicht drei, und der Satz zwingt den Zuhörer zum Nachzählen. Stattdessen „Was davon heute existiert“, und der Abschluss macht daraus eine Fähigkeitsaussage: drei fremde Bereiche, eine Kette."),
-      note("4:50 — die Zwölf-Wochen-Aussage aus dem Deck landet hier als Angebot, nicht als Frage: die Eröffnungsfrage bleibt die Frage, und zwölf Wochen ist die Antwort darauf. „In Excel“ ist im Schluss gestrichen und bleibt nur in der Story, wo es verdient ist."),
+      note("Der Konzern mit den zwölf Gesellschaften, die Bookend-Frage und die Prüferfrage bleiben. Das ist der stärkste Teil und er trägt den ganzen Pitch."),
+      note("0:45 — die Passage heißt jetzt Compliance und hat nur noch einen Höhepunkt. Die Prüferfrage ist der Höhepunkt, der gegangene Kollege ist ihre Ursache, nicht die zweite Pointe. Er ist deshalb aus 0:00 hierher gewandert; vorher stand er zweimal im Text."),
+      note("0:45 — das Sammelpostfach steht jetzt vor Excel. Ein Sammelpostfach für Freigaben ist das belastendere Detail und nicht abgenutzt."),
+      note("0:45 — die Entlastung („nicht schlecht, von 2015“) kommt nach dem Schmerz statt davor, wo sie ihn abgefedert hat. Die Passage landet auf Compliance als Prüfung am Ende, und damit direkt auf der Compliance-Spalte der Chain-Folie: dort ist die Freigabe unterschrieben, bevor Code entsteht."),
+      note("1:35 — aus „Warum KI daran scheitert“ wird die Tool-gegen-System-Argumentation des Decks: erst die eingestampften Prototypen, dann der verlorene Kontext, dann die vier Bedingungen, dann die CEO-Zahl als Folgerung statt als Einstieg."),
+      note("1:35 — die Prompt-to-App-Antwort behält den Ton, aber der Unterschied ist materiell: nicht „eine Prüfkette“, sondern etwas, das der Prüfer akzeptiert."),
+      note("2:35 — aus „Zwei Hälften“ wird „Was bei Ihnen liegt“. Die drei Dokumente standen vorher mitten im Absatz und sind jetzt der Einstieg. Neu ist der Satz zum Ausstieg an jedem Übergang, der die Gate-Aussage der Chain-Folie spiegelt."),
+      note("3:45 — „Ihre Systeme haben Daten, Ihr Prozess hat kein Gedächtnis“ steht jetzt nur noch hier, dafür ungeteilt. Vorher war es zweimal im Text und hat sich selbst die Wirkung genommen. Die 351 Muster und 2.064 Fehler bleiben."),
+      note("4:20 — „Drei Dinge laufen heute“ ist raus. Es laufen nicht drei, und der Satz zwingt den Zuhörer zum Nachzählen. Der Abschluss macht daraus eine Fähigkeitsaussage: drei fremde Bereiche, eine Kette."),
+      note("4:55 — die Zwölf-Wochen-Aussage aus dem Deck landet hier als Angebot, nicht als Frage: die Eröffnungsfrage bleibt die Frage, zwölf Wochen ist die Antwort darauf. „In Excel“ ist im Schluss gestrichen und bleibt nur in der Story, wo es verdient ist."),
 
       rule(),
       new Paragraph({
         spacing: { after: 160 },
         children: [new TextRun({ text: "Bitte prüfen, bevor das so gesprochen wird", bold: true, size: 26 })],
       }),
+      note("Fehlt noch: die echte Konsequenz. Nach „Niemand kann die Frage beantworten“ gehört ein Halbsatz, was daraus wirklich folgt — eine Feststellung, ein eingeschränktes Testat, ein verschobener Abschluss. Momentan ist das schlimmste implizierte Ergebnis Peinlichkeit. Mit einer echten Folge ist es die Brücke zur EBIT-Zahl bei 1:35."),
+      note("Offen: War der Auslöser Regulierung oder Wachstum? „Zwölf Gesellschaften“ fällt zweimal, aber die Zahl ändert sich nie. Wenn der Konzern inzwischen achtzehn hat, ist das die stärkere Fassung, weil Wachstum ein Offensiv-Etat ist und Regulierung ein Defensiv-Etat."),
       note("Zahl im Deck gegen Zahl im Skript: Das Skript nennt PwC, viertausendvierhundert CEOs, knapp sechzig Prozent. Das Deck nennt 61 Prozent nach McKinsey. Zwei Quellen für dieselbe Aussage in einem Termin. Eine davon muss weg."),
       note("Baru: Das Skript sagt „seit August“, das Deck sagt „since June 2026“. Ein Datum ist falsch."),
       note("Board-Agent: Das Skript sagt „läuft vollständig in Frankfurt“. Das Deck sagt „built and verified, offered, not yet deployed“. Läuft er bei einem Kunden oder auf eigener Infrastruktur? Davon hängt ab, ob im Deck „audit-grade output in production“ stehen darf."),
-      note("Die halbierten Prototypen und die vier Bedingungen brauchen im Deck dieselbe Quellenzeile, die die CEO-Zahl schon hat."),
+      note("Die halbierten Prototypen brauchen im Deck dieselbe Quellenzeile, die die CEO-Zahl schon hat."),
     ],
   }],
 });
 
 Packer.toBuffer(doc).then((buf) => {
-  fs.writeFileSync("/home/user/Athena/speech/Pitch4_AthenaRun.docx", buf);
+  fs.writeFileSync("/home/user/Athena/decks/script/Pitch4_AthenaRun.docx", buf);
   console.log("written");
 });
