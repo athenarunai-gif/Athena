@@ -85,30 +85,60 @@ def outcome_card(label, statement, accent_label=False):
 # slide 1 — cover
 # --------------------------------------------------------------------------
 COVER_SUB_COLOR = "C9C9CE"   # sampled out of the original cover artwork
+T_HERO = 4800                # measured off the original artwork: 48pt
+
+# Glyph-top positions measured in the original 1920x1080 cover bitmap, converted
+# to inches. The two hero lines sit 0.8125in apart; keeping that delta fixed makes
+# the leading exact regardless of how the renderer resolves font metrics.
+HERO_LEAD = 0.8125
+COVER_SUB_Y = 4.618 - 0.048  # same gap, scaled to 17pt
+
+# Candidate openers, as (line 1, line 2, hero size). At the artwork's original
+# 48pt a hero line fits about 33 characters; C carries the founders' sentence
+# verbatim and has to drop to 39pt to fit, which costs a fifth of the hero.
+COVER = {
+    "A": ("AI writes code.", "It doesn’t finish applications.", 4800),
+    "B": ("Code generation is solved.", "Finished applications are not.", 4800),
+    "C": ("AI writes code.", "It doesn’t deliver finished applications.", 3900),
+}
+COVER_VARIANT = "A"
+
+COVER_SUB = ("Enterprise-grade means integrated, tested, audit-proof and "
+             "signed off by a person.")
+COVER_THESIS = "We deliver the finished application."
 
 
 def patch_cover_art():
-    """The cover sub-line is baked into the background artwork, em dash and all.
-    Lift it out of the bitmap by copying a clean strip of the dotted backdrop
-    over it (the dot grid has a 44 px period, so a 88 px offset lands exactly on
-    the grid) and re-set the line as live Poppins text."""
+    """The whole cover headline is baked into the background artwork. Lift it out
+    of the bitmap so the claim can be rewritten: the dotted backdrop is perfectly
+    flat and periodic on a 44 px grid, so tiling one clean strip across the text
+    band leaves no seam. Everything above y=348 (the top rule) and below y=700 is
+    untouched."""
     from PIL import Image
     src = f"{UNPACKED}/ppt/media/image1.png"
     im = Image.open(src).convert("RGB")
-    clean = im.crop((0, 744, im.width, 788))
-    im.paste(clean, (0, 656))
+    strip = im.crop((0, 744, im.width, 788))       # 744 % 44 == 40
+    for y in range(348, 700, 44):                  # 348 % 44 == 40, so the grid lines up
+        im.paste(strip, (0, y))
     im.save(src)
 
 
 def slide1():
-    """The hero headline stays in the brand artwork. The sub-line is repainted as
-    live text so it can lose its em dash."""
+    """Cover, fully live text: the claim moves from process ("the chain") to
+    outcome ("the finished application")."""
+    line1, line2, size = COVER[COVER_VARIANT]
+    scale = size / T_HERO
+    # 33 characters fit at 48pt; the budget grows as the type shrinks
+    for line in (line1, line2):
+        assert len(line) <= round(33 / scale), (line, len(line))
+
+    y = 2.708 - 0.136 * scale
+    lead = HERO_LEAD * scale
     s = [background("rId2")]
-    s += [text(0.77, 4.57, 9.5, 0.24,
-               run("The bottleneck has moved from writing code to everything around it.",
-                   T_STAGE, COVER_SUB_COLOR))]
-    s += [text(M, 5.02, 9.0, 0.28,
-               run("We build the chain, not the generator.", T_STAGE, ACCENT, bold=True))]
+    s += [text(0.77, y, 12.0, 0.80 * scale, run(line1, size, TEXT, bold=True))]
+    s += [text(0.77, y + lead, 12.0, 0.80 * scale, run(line2, size, MUTED))]
+    s += [text(0.77, COVER_SUB_Y, 11.00, 0.24, run(COVER_SUB, T_STAGE, COVER_SUB_COLOR))]
+    s += [text(M, 5.02, 9.0, 0.28, run(COVER_THESIS, T_STAGE, ACCENT, bold=True))]
     return s, ["image1.png"]
 
 
