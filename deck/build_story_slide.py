@@ -31,12 +31,12 @@ def diamond(x, y, d, fill):
 
 # marker, statement, colour of the statement
 STATIONS = [
-    ("2015",           "Das Reporting läuft. Und es läuft gut.", TEXT),
-    ("DANN",           "Neue gesetzliche Anforderung.",           MUTED),
-    ("DER HERSTELLER", "Nächstes Release: frühestens 2027.",      MUTED),
-    ("2023",           "Der Kollege geht. Mit ihm die Logik.",    MUTED),
-    ("SEITDEM",        "Es läuft daneben, in Excel.",             MUTED),
-    ("DER PRÜFER",     "Wer hat was wann freigegeben?",           ACCENT),
+    ("2015",        "The reporting runs. And it runs well.",   TEXT),
+    ("THEN",        "New legal requirements.",                 MUTED),
+    ("THE VENDOR",  "Next release: 2027 at the earliest.",     MUTED),
+    ("2023",        "The colleague goes. So does the logic.", MUTED),
+    ("SINCE THEN",  "It runs on the side. In Excel.",          MUTED),
+    ("THE AUDITOR", "Who approved what, and when?",            ACCENT),
 ]
 
 RAIL_Y = 3.16
@@ -48,13 +48,13 @@ BAND_Y, BAND_H = 5.10, 1.20
 def story_slide():
     s = [background("rId3")]
 
-    s.append(title("Das System ist nicht schlecht.", " Es ist von 2015."))
-    s.append(eyebrow("DIE AUSGANGSLAGE"))
+    s.append(title("The system isn\u2019t bad.", " It\u2019s from 2015."))
+    s.append(eyebrow("THE STARTING POINT"))
     s.append(hrule(1.19))
-    s.append(lead([run("Der Prozess ist gewachsen. Das Werkzeug nicht.", 14, MUTED, POP)],
+    s.append(lead([run("The process grew. The tool did not.", 14, MUTED, POP)],
                   COL_X, 1.40, 11.20, 0.30))
 
-    s.append(kicker("EIN KONZERN  ·  ZWÖLF GESELLSCHAFTEN  ·  EIN REPORTING", COL_X, 2.14, 8.0))
+    s.append(kicker("ONE GROUP  ·  TWELVE SUBSIDIARIES  ·  ONE REPORTING SYSTEM", COL_X, 2.14, 8.0))
 
     # the rail, and one station per sixth of the column
     s.append(rect(COL_X, RAIL_Y, COL_W, 0.01214, fill=RULE))
@@ -76,8 +76,8 @@ def story_slide():
     # the line the whole slide exists for
     s.append(rect(COL_X, BAND_Y, COL_W, BAND_H, fill=CARD, line=RULE))
     s.append(textbox(COL_X + 0.40, BAND_Y, COL_W - 0.80, BAND_H,
-                     [para([run("Ihre Systeme haben Daten.  ", 20, TEXT, POP, bold=True),
-                            run("Ihr Prozess hat kein Gedächtnis.", 20, ACCENT, POP, bold=True)],
+                     [para([run("Your systems have data.  ", 20, TEXT, POP, bold=True),
+                            run("Your process has no memory.", 20, ACCENT, POP, bold=True)],
                            20)], anchor="ctr", autofit=False))
 
     s.append(logo("rId4"))
