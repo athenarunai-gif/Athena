@@ -267,56 +267,56 @@ DEFENSIBLE = [
 
 
 def slide5():
-    """The founders removed the "why it's defensible" panel, so the compounding
-    loop and the library counts re-flow across the full width instead of leaving
-    the right half of the slide empty next to an orphaned divider."""
+    """The moat slide showed the artifact (a library) but not why it holds. The
+    three reasons that used to sit in a side panel now close the slide as a band
+    across the full width, and the sentence that merely restated the loop diagram
+    is gone."""
     s = [backdrop()]
     s += header("Our moat.", " Every build makes the next one safer.", "The moat")
-    s += [text(M, 1.40, W, 0.24,
+    s += [text(M, 1.40, W, 0.22,
                run("Anyone can generate code. What compounds is what real production "
                    "builds taught us.", T_LEAD, MUTED))]
 
-    # the compounding loop, now the full width of the slide
-    s += [eyebrow(M, 2.00, "THE COMPOUNDING LOOP", w=5.0, spc=300)]
+    # the compounding loop
+    s += [eyebrow(M, 1.94, "THE COMPOUNDING LOOP", w=5.0, spc=300)]
     gap = 0.36
     cw = (W - 2 * gap) / 3
     for i, (name, sub) in enumerate(CYCLE):
         x = M + i * (cw + gap)
-        s += [card(x, 2.30, cw, 1.00)]
-        s += [text(x, 2.54, cw, 0.28, run(name, 2000, TEXT), align="ctr")]
-        s += [text(x, 2.93, cw, 0.17, run(sub, T_MICRO, MUTED, font=MONO), align="ctr")]
+        s += [card(x, 2.20, cw, 0.98)]
+        s += [text(x, 2.42, cw, 0.28, run(name, 2000, TEXT), align="ctr")]
+        s += [text(x, 2.80, cw, 0.17, run(sub, T_MICRO, MUTED, font=MONO), align="ctr")]
         if i < 2:
-            s += [triangle(x + cw + gap / 2, 2.80, 0.10, 0.12, fill=MUTED, rot=5400000)]
+            s += [triangle(x + cw + gap / 2, 2.69, 0.10, 0.12, fill=MUTED, rot=5400000)]
 
-    # the return path: reuse feeds the next build
     first_c, last_c = M + cw / 2, M + 2 * (cw + gap) + cw / 2
-    loop_bottom = 3.66
-    s += [rect(last_c, 3.30, 0.012, loop_bottom - 3.30, fill=ACCENT)]
+    loop_bottom = 3.52
+    s += [rect(last_c, 3.18, 0.012, loop_bottom - 3.18, fill=ACCENT)]
     s += [rect(first_c, loop_bottom, last_c - first_c, 0.012, fill=ACCENT)]
-    s += [rect(first_c, 3.44, 0.012, loop_bottom - 3.44, fill=ACCENT)]
-    s += [triangle(first_c + 0.006, 3.38, 0.12, 0.15)]
-    s += [text(first_c, 3.78, last_c - first_c, 0.17,
+    s += [rect(first_c, 3.32, 0.012, loop_bottom - 3.32, fill=ACCENT)]
+    s += [triangle(first_c + 0.006, 3.26, 0.12, 0.15)]
+    s += [text(first_c, 3.62, last_c - first_c, 0.17,
                run("every build feeds the next", T_EYEBROW, MUTED, font=MONO, spc=100),
                align="ctr")]
-    s += [text(M, 4.14, W, 0.22,
-               run("Every project writes validated patterns and documented failures back "
-                   "into the library. Every next build queries it first.", T_STAGE_SUB, MUTED))]
 
     # what the library holds
-    s += [hairline(4.58)]
-    s += [eyebrow(M, 4.76, "THE PATTERN LIBRARY", w=5.0, spc=300)]
-    tw = (W - 0.36) / 2
+    s += [hairline(4.02)]
+    s += [eyebrow(M, 4.20, "THE PATTERN LIBRARY", w=5.0, spc=300)]
+    tw = (W - gap) / 2
     for i, (num, col, label) in enumerate([("Hundreds", TEXT, "validated patterns"),
                                            ("Thousands", ACCENT, "documented anti-patterns")]):
-        x = M + i * (tw + 0.36)
-        s += [card(x, 5.02, tw, 1.22)]
-        s += [text(x + 0.30, 5.26, tw - 0.60, 0.58, run(num, T_STAT, col))]
-        s += [text(x + 0.30, 5.88, tw - 0.60, 0.21, run(label, T_LEAD, TEXT))]
+        x = M + i * (tw + gap)
+        s += [card(x, 4.46, tw, 1.16)]
+        s += [text(x + 0.30, 4.68, tw - 0.60, 0.58, run(num, T_STAT, col))]
+        s += [text(x + 0.30, 5.30, tw - 0.60, 0.21, run(label, T_LEAD, TEXT))]
 
-    s += [hairline(6.40)]
-    s += [text(M, 6.56, W, 0.24,
-               run("The chain fills the library. The library makes the next chain safer. "
-                   "That loop is the moat.", T_LEAD, TEXT, bold=True))]
+    # why it holds — the argument, without the side panel it used to sit in
+    s += [hairline(5.82)]
+    for i, (head, body) in enumerate(DEFENSIBLE):
+        x = M + i * (cw + gap)
+        s += [text(x, 5.98, cw, 0.20, run(head, 1300, ACCENT, bold=True))]
+        s += [text(x, 6.22, cw, 0.38, run(body, 1100, MUTED), anchor="t", autofit=False)]
+
     s += [logo("rId2")]
     return s, ["image16.png"]
 
