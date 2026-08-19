@@ -242,7 +242,7 @@ def slide8(bg_rid, logo_rid, icons):
     s += [text(9.09, 0.68, 3.47, 0.24,
                run("BUILDS", T_EYEBROW, MUTED, font=MONO, spc=120), align="r")]
     s += [hairline(1.19)]
-    s += [text(M, 1.44, 9.90, 0.24,
+    s += [text(M, 1.40, 9.90, 0.24,
                run("Three systems taken end to end through the chain. All three in use.",
                    T_LEAD, MUTED))]
     s += [hairline(2.00)]
@@ -290,6 +290,117 @@ def slide8(bg_rid, logo_rid, icons):
 
 
 # --------------------------------------------------------------------------
+# typography pass over the slides this script does not rebuild
+# --------------------------------------------------------------------------
+def edit_runs(xml, text, size=None, bold=None, colour=None, face=None, new_text=None):
+    """Rewrite the run properties of every run whose content is exactly `text`."""
+    hits = [0]
+
+    def repl(m):
+        run = m.group(0)
+        tm = re.search(r"<a:t>(.*?)</a:t>", run, re.S)
+        if not tm or tm.group(1).strip() != text.strip():
+            return run
+        hits[0] += 1
+
+        def fix(rm):
+            tag = rm.group(0)
+            if size is not None:
+                tag = re.sub(r'\s+sz="\d+"', "", tag)
+                tag = tag.replace("<a:rPr", f'<a:rPr sz="{size}"', 1)
+            if bold is not None:
+                tag = re.sub(r'\s+b="\d"', "", tag)
+                tag = tag.replace("<a:rPr", f'<a:rPr b="{1 if bold else 0}"', 1)
+            return tag
+
+        run = re.sub(r"<a:rPr\b[^>]*>", fix, run, count=1)
+        if colour:
+            run = re.sub(r"<a:solidFill>.*?</a:solidFill>",
+                         f'<a:solidFill><a:srgbClr val="{colour}"/></a:solidFill>',
+                         run, count=1, flags=re.S)
+        if face:
+            run = re.sub(r'typeface="[^"]+"', f'typeface="{face}"', run)
+        if new_text is not None:
+            run = re.sub(r"<a:t>.*?</a:t>", f"<a:t>{ci._esc(new_text)}</a:t>",
+                         run, count=1, flags=re.S)
+        return run
+
+    xml = re.sub(r"<a:r>.*?</a:r>", repl, xml, flags=re.S)
+    assert hits[0], f"no run found for {text!r}"
+    return xml
+
+
+def delete_shape(xml, text):
+    """Remove the shape containing `text`."""
+    m = re.search(r"<p:sp>(?:(?!</p:sp>).)*?" + re.escape(text) + r".*?</p:sp>", xml, re.S)
+    assert m, f"no shape containing {text!r}"
+    return xml.replace(m.group(0), "")
+
+
+def move_shape(xml, text, new_y):
+    """Shift the shape that contains `text` to a new vertical position."""
+    m = re.search(r"<p:sp>(?:(?!</p:sp>).)*?" + re.escape(text) + r".*?</p:sp>", xml, re.S)
+    assert m, f"no shape containing {text!r}"
+    sp = m.group(0)
+    fixed = re.sub(r'(<a:off x="\d+" y=")\d+(")', lambda o: o.group(1) + str(emu(new_y)) + o.group(2),
+                   sp, count=1)
+    return xml.replace(sp, fixed)
+
+
+def typography_pass():
+    """Nine deviations found by auditing every run on slides 1-9: one foreign
+    typeface, three off-scale sizes, one off-palette colour, two runs with no
+    size at all (which render differently in PowerPoint, Keynote and Slides), an
+    unfilled section tag, and one slide missing its tag entirely."""
+    def load(pos):
+        part = resolve_part(pos)
+        path = f"{WORK}/ppt/slides/{part}"
+        return path, open(path, encoding="utf-8").read()
+
+    # slide 1 — a white strip down the left edge, two buried leftovers from the
+    # previous cover, Calibri, and an off-palette red
+    path, x = load(1)
+    x = re.sub(r'(<p:pic>(?:(?!</p:pic>).)*?<a:off x=")\d+(" y="0"/><a:ext cx="1[12]\d{6})',
+               lambda m: m.group(1) + "0" + m.group(2), x, count=1)
+    x = delete_shape(x, "The bottleneck has moved from writing code")
+    x = delete_shape(x, "We build the chain, not the generator.")
+    x = edit_runs(x, "Frankfurt am Main, Germany", size=1100, colour=MUTED, face="Poppins")
+    x = x.replace('<a:srgbClr val="E06666"/>', f'<a:srgbClr val="{ACCENT}"/>')
+    open(path, "w", encoding="utf-8").write(x)
+
+    # slide 4 — 120pt and 44pt are both off the scale, and the two figures were
+    # sized as if one outranked the other
+    path, x = load(4)
+    x = edit_runs(x, "61", size=5400)
+    x = edit_runs(x, "50", size=3800)
+    x = edit_runs(x, "%", size=2400)
+    open(path, "w", encoding="utf-8").write(x)
+
+    # slide 5 in the file, position 7 — the section tag was never filled and two
+    # runs carry no size
+    path, x = load(7)
+    x = edit_runs(x, "?", new_text="THE MOAT")
+    x = edit_runs(x, "Every build makes the next one safer and faster",
+                  new_text="Every build makes the next one safer and faster.")
+    x = edit_runs(x, "Customer intent feeds the platform.  Delivered applications "
+                     "compound its engineering knowledge.", size=1400)
+    x = edit_runs(x, "Standardizing the foundation. Investing in the business idea "
+                     "and customization.", size=1400, bold=True)
+    open(path, "w", encoding="utf-8").write(x)
+
+    # slide 9 — the only content slide without a section tag
+    path, x = load(9)
+    x = move_shape(x, "leave you with a question", 1.40)
+    ci._uid[0] = 700
+    tag = text(9.09, 0.68, 3.47, 0.24,
+               run("ONE QUESTION", T_EYEBROW, MUTED, font=MONO, spc=120), align="r")
+    x = x.replace("</p:spTree>", tag + "</p:spTree>")
+    open(path, "w", encoding="utf-8").write(x)
+
+    print("typography pass applied to positions 1, 4, 7, 9")
+
+
+# --------------------------------------------------------------------------
 def main():
     src = sys.argv[1]
     out = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_OUT
@@ -301,6 +412,7 @@ def main():
 
     splice(3, slide3, "Complex Software.")
     splice(8, slide8, "What we’ve built.")
+    typography_pass()
 
     if os.path.exists(out):
         os.remove(out)
