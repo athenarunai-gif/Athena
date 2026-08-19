@@ -196,30 +196,42 @@ def slide3(bg_rid, logo_rid, _icons):
 # --------------------------------------------------------------------------
 # slide 8 — the reference slide
 # --------------------------------------------------------------------------
-S8_CARD_X = [0.76, 4.72, 8.68]
-S8_CARD_W, S8_CARD_Y, S8_CARD_H = 3.61, 2.20, 3.94
+# Three identical cards made the deck's proof slide read like a table. It now
+# leads with the one system that has a customer-side number, and the other two
+# sit compact beside it. The product screenshots stay out: one shows an empty
+# window with a sidebar, the other a "extracting financial data" spinner, so
+# neither shows a result at any size.
+HERO = dict(
+    name="Baru", icon=2, sector="B2B sales · outbound acquisition",
+    does=["Finds and qualifies B2B leads",
+          "Drafts the outreach",
+          "Every send through a Slack approval"],
+    result_label="RESULT  ·  PAYING CUSTOMER SINCE JUNE 2026",
+    stat="150", stat_unit=" leads a month",
+)
+
+COMPACT = [
+    dict(name="CFO Suite", icon=0, sector="SME financing · corporate finance",
+         does=["Financials in, bank-grade rating out",
+               "Default probability and pricing"],
+         proof="CALIBRATED AGAINST A REAL BANK SCORECARD"),
+    dict(name="Board Agent", icon=1, sector="Pharma / CDMO · board level",
+         does=["Board documents into a cited briefing",
+               "Watermarked PDF, signed audit trail"],
+         proof="158 TESTS GREEN  ·  EU-ONLY, VERIFIED"),
+]
+
+HERO_X, HERO_W = 0.76, 6.60
+SIDE_X, SIDE_W = 7.62, 4.94
+ROW_Y, ROW_H = 2.20, 3.94
+SIDE_H = 1.90
 S8_PAD = 0.28
 
-BUILDS = [
-    dict(name="CFO Suite", sector="SME financing · corporate finance",
-         does=["Reads a company’s financials",
-               "Bank-grade rating and default probability",
-               "Priced, delivered as a finished PDF"],
-         proof="Bank scorecard", proof_col=TEXT,
-         note="Calibrated against a real one."),
-    dict(name="Board Agent", sector="Pharma / CDMO · board level",
-         does=["Board documents into a cited briefing",
-               "Watermarked PDF, signed audit trail",
-               "EU-only, local models, no training"],
-         proof="158 tests green", proof_col=TEXT,
-         note="Verified end to end."),
-    dict(name="Baru", sector="B2B sales · outbound acquisition",
-         does=["Finds and qualifies B2B leads",
-               "Drafts the outreach",
-               "Every send through a Slack approval"],
-         proof="Paying customer", proof_col=ACCENT,
-         note="Live since June 2026."),
-]
+
+def live_chip(x, w, y):
+    cx = x + w - S8_PAD - 0.92
+    return [rect(cx, y, 0.92, 0.30, fill=BG, line=ACCENT),
+            micro(cx, y + 0.085, "LIVE", w=0.92, color=ACCENT, align="ctr", spc=100)]
 
 
 def slide8(bg_rid, logo_rid, icons):
@@ -235,29 +247,40 @@ def slide8(bg_rid, logo_rid, icons):
                    T_LEAD, MUTED))]
     s += [hairline(2.00)]
 
-    for i, (x, b) in enumerate(zip(S8_CARD_X, BUILDS)):
-        ix, iw = x + S8_PAD, S8_CARD_W - 2 * S8_PAD
-        s += [card(x, S8_CARD_Y, S8_CARD_W, S8_CARD_H)]
-        if i < len(icons):
-            s += [pic(ix, S8_CARD_Y + 0.24, 0.24, 0.24, icons[i])]
-        chip_x = x + S8_CARD_W - S8_PAD - 0.92
-        s += [rect(chip_x, S8_CARD_Y + 0.20, 0.92, 0.30, fill=BG, line=ACCENT)]
-        s += [micro(chip_x, S8_CARD_Y + 0.285, "LIVE", w=0.92, color=ACCENT,
-                    align="ctr", spc=100)]
-        s += [text(ix, S8_CARD_Y + 0.56, iw, 0.34, run(b["name"], 2000, TEXT))]
-        s += [hairline(S8_CARD_Y + 1.04, x=ix, w=iw)]
-        s += [micro(ix, S8_CARD_Y + 1.20, "SECTOR", w=iw)]
-        s += [text(ix, S8_CARD_Y + 1.38, iw, 0.20, run(b["sector"], 1050, TEXT))]
-        s += [micro(ix, S8_CARD_Y + 1.70, "WHAT IT DOES", w=iw)]
-        s += [bullets(ix, S8_CARD_Y + 1.88, iw, 0.90, b["does"], sz=1050)]
-        s += [hairline(S8_CARD_Y + 2.86, x=ix, w=iw)]
-        s += [micro(ix, S8_CARD_Y + 3.02, "PROOF", w=iw)]
-        s += [text(ix, S8_CARD_Y + 3.20, iw, 0.24,
-                   run(b["proof"], T_LEAD, b["proof_col"], bold=True))]
-        s += [text(ix, S8_CARD_Y + 3.50, iw, 0.20, run(b["note"], 1050, MUTED))]
+    # hero — the system with a customer-side number
+    ix, iw = HERO_X + S8_PAD, HERO_W - 2 * S8_PAD
+    s += [card(HERO_X, ROW_Y, HERO_W, ROW_H)]
+    if len(icons) > HERO["icon"]:
+        s += [pic(ix, ROW_Y + 0.24, 0.24, 0.24, icons[HERO["icon"]])]
+    s += live_chip(HERO_X, HERO_W, ROW_Y + 0.20)
+    s += [text(ix, ROW_Y + 0.56, iw, 0.40, run(HERO["name"], 2400, TEXT))]
+    s += [hairline(ROW_Y + 1.12, x=ix, w=iw)]
+    s += [micro(ix, ROW_Y + 1.28, "SECTOR", w=iw)]
+    s += [text(ix, ROW_Y + 1.46, iw, 0.20, run(HERO["sector"], 1050, TEXT))]
+    s += [micro(ix, ROW_Y + 1.78, "WHAT IT DOES", w=iw)]
+    s += [bullets(ix, ROW_Y + 1.96, iw, 0.70, HERO["does"], sz=1050)]
+    s += [hairline(ROW_Y + 2.76, x=ix, w=iw)]
+    s += [micro(ix, ROW_Y + 2.92, HERO["result_label"], w=iw, spc=150)]
+    s += [text(ix, ROW_Y + 3.10, iw, 0.62, [
+        run(HERO["stat"], T_STAT, ACCENT),
+        run(HERO["stat_unit"], T_STAGE, MUTED)])]
+
+    # the other two, compact
+    for i, b in enumerate(COMPACT):
+        y = ROW_Y + i * (SIDE_H + 0.14)
+        jx, jw = SIDE_X + S8_PAD, SIDE_W - 2 * S8_PAD
+        s += [card(SIDE_X, y, SIDE_W, SIDE_H)]
+        if len(icons) > b["icon"]:
+            s += [pic(jx, y + 0.22, 0.20, 0.20, icons[b["icon"]])]
+        s += live_chip(SIDE_X, SIDE_W, y + 0.18)
+        s += [text(jx, y + 0.42, jw, 0.31, run(b["name"], 2000, TEXT))]
+        s += [text(jx, y + 0.76, jw, 0.20, run(b["sector"], 1050, MUTED))]
+        s += [bullets(jx, y + 0.98, jw, 0.42, b["does"], sz=1050)]
+        # the proof reads as a stamp, not as a third bullet
+        s += [hairline(y + 1.48, x=jx, w=jw)]
+        s += [micro(jx, y + 1.60, b["proof"], w=jw, color=MUTED, spc=100)]
 
     s += [hairline(6.38)]
-    # the delivery time is the strongest thing on this slide, so it closes it
     s += [text(M, 6.56, 11.80, 0.24, [
         run("Three sectors, one chain. Every one of them live in ", T_LEAD, TEXT, bold=True),
         run("days or weeks", T_LEAD, ACCENT, bold=True),
