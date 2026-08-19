@@ -23,7 +23,9 @@ Slide 8 — the reference slide
   the one system with a paying customer — was not on the slide at all. Two
   light-mode product screenshots sat on top of the cards and hid it.
   The screenshots are out, every card now describes its own system in three
-  parallel bullets, and each closes on a single hard proof.
+  parallel bullets, and each closes on a single hard proof. The closing line
+  carries the delivery time, which is the strongest claim available here and the
+  one that sets up the twelve-weeks question at the end of the deck.
 """
 import os
 import re
@@ -255,9 +257,11 @@ def slide8(bg_rid, logo_rid, icons):
         s += [text(ix, S8_CARD_Y + 3.50, iw, 0.20, run(b["note"], 1050, MUTED))]
 
     s += [hairline(6.38)]
-    s += [text(M, 6.56, 11.80, 0.24,
-               run("Three sectors, one chain. The same pipeline produced all three.",
-                   T_LEAD, TEXT, bold=True))]
+    # the delivery time is the strongest thing on this slide, so it closes it
+    s += [text(M, 6.56, 11.80, 0.24, [
+        run("Three sectors, one chain. Every one of them live in ", T_LEAD, TEXT, bold=True),
+        run("days or weeks", T_LEAD, ACCENT, bold=True),
+        run(".", T_LEAD, TEXT, bold=True)])]
     s += [pic(0.69, 7.04, 1.18, 0.28, logo_rid, name="Logo")]
     return s
 
