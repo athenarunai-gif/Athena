@@ -6,14 +6,27 @@
 |---|---|
 | `AthenaRun_Pitch_Deck_reordered.key` | Das Original-Deck mit neuer Slide-Reihenfolge. Inhalte, Layouts und Bilder sind unverändert. |
 | `neue-slides.html` | Vier fehlende Slides als Entwurf im Raster und in der Typografie des Decks. |
+| `slides/AthenaRun_neue_Slides.pptx` | Dieselben vier Slides als **editierbare** Slides — in Keynote öffnen und per Copy-Paste ins Deck ziehen. |
 | `slides/AthenaRun_neue_Slides.pdf` | Dieselben vier Slides als PDF, 4 Seiten à 960×540 pt, in Poppins gesetzt. |
 | `slides/*.png` | Dieselben vier Slides einzeln, 1920×1080, zum direkten Einfügen in Keynote. |
 
 Die vier neuen Slides sind **nicht** in der `.key`-Datei enthalten — Keynote
 legt Objekt-IDs, Component-Index und Stylesheet-Referenzen an, die sich von
 außen nicht zuverlässig erzeugen lassen, ohne die Datei zu beschädigen. Die
-`.key` enthält die zwölf bestehenden Slides in neuer Reihenfolge; die vier
-neuen kommen als PNG oder PDF dazu.
+`.key` enthält die zwölf bestehenden Slides in neuer Reihenfolge.
+
+Der beste Weg für die vier neuen: `slides/AthenaRun_neue_Slides.pptx` in
+Keynote öffnen, im Foliennavigator alle vier markieren, kopieren, und in der
+`.key` an den richtigen Stellen einfügen. Das ergibt echte Keynote-Slides mit
+editierbaren Textfeldern, nicht eingeklebte Bilder. Die PNGs bleiben als
+Rückfallweg.
+
+Prüfung der PPTX in dieser Umgebung: Schema-Validierung bestanden, alle vier
+Slides über python-pptx gegengelesen, und jeder Textkasten gegen die echten
+Poppins-Metriken auf Überlauf geprüft (kein Befund). Eine Bildvorschau der
+PPTX war nicht möglich — die Umgebung hat nur `libreoffice-core` ohne
+Impress. Die identische Geometrie wurde stattdessen im Browser-Rendering in
+echtem Poppins geprüft.
 
 ## Was an der .key-Datei geändert wurde
 
