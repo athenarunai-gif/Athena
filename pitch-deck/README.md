@@ -47,10 +47,17 @@ die Einreichung als PDF exportieren (Keynote bettet keine Schriften ein).
 
 **Fehlende Slides.** Solution (Pos. 4), Business Model (Pos. 12), The Ask &
 Use of Funds (Pos. 14), Closing & Contact (Pos. 15). Entwürfe in
-`neue-slides.html`, Platzhalter für Zahlen sind gelb markiert.
+`neue-slides.html`. Gelb markiert = fehlt noch und muss von euch kommen.
+Rot gepunktet = Vorschlag, prüfen und überschreiben.
 
-**Widerspruch in den Zahlen.** Traction nennt 7 LOIs mit €150K Gesamtwert
-(≈ €21k pro Kunde), die Markt-Slide rechnet mit $600k pro Kunde. Faktor 28.
+Stand der Zahlen: Runde ist auf €500k Pre-Seed gesetzt, die Aufteilung der
+Mittel (40/25/25/10) ist ein Vorschlag. Offen sind Instrument, Runway,
+Meilensteine, die drei Preisfelder im Business Model sowie E-Mail, Telefon
+und Website auf der Closing-Slide.
+
+Das Business Model bildet zwei Umsatzlinien ab: Festpreis-Delivery plus
+Betriebs-Retainer, und daneben die Plattform-Lizenz für Teams, die die Kette
+selbst fahren.
 
 **Cover.** Gerades Apostroph in „Germany's" gegen typografische Apostrophe im
 Rest des Decks. Die spitzen Klammern um „Software Implementation & Delivery

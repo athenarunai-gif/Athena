@@ -84,6 +84,7 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
 .vrule{position:absolute; left:calc(var(--x)*var(--u)); top:calc(var(--y)*var(--u)); width:1px; height:calc(var(--h)*var(--u)); background:var(--hair)}
 .crule{position:absolute; left:calc(var(--x)*var(--u)); top:calc(var(--y)*var(--u)); width:calc(var(--w)*var(--u)); height:1px; background:var(--hair)}
 .fill{color:var(--fill); border-bottom:1px dashed color-mix(in srgb,var(--fill) 55%,transparent); font-weight:500}
+.prop{border-bottom:1px dotted color-mix(in srgb,var(--accent) 60%,transparent)}
 .logo{
   position:absolute; left:calc(54.7*var(--u)); top:calc(500*var(--u));
   font-size:calc(11 * var(--u)); font-weight:600; letter-spacing:-.01em; color:var(--paper);
@@ -103,7 +104,7 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
 <header class="masthead">
   <p class="eyebrow">AthenaRun · Pitch Deck</p>
   <h1>Vier fehlende Slides und die neue Reihenfolge</h1>
-  <p class="lede">Die Reihenfolge ist bereits in der <code>.key</code>-Datei umgesetzt. Hier sind die vier Slides, die im Deck fehlen — im Raster und in der Typografie des bestehenden Decks (960×540, Rand 54,7, drei Spalten à 259,9). Alle <span class="fill">gelb markierten Felder</span> sind Platzhalter für Zahlen, die nur ihr kennt.</p>
+  <p class="lede">Die Reihenfolge ist bereits in der <code>.key</code>-Datei umgesetzt. Hier sind die vier Slides, die im Deck fehlen — im Raster und in der Typografie des bestehenden Decks (960×540, Rand 54,7, drei Spalten à 259,9). <span class="fill">Gelb</span> markiert fehlt noch und muss von euch kommen. <span class="prop">Rot gepunktet</span> ist ein Vorschlag von mir — prüfen und überschreiben.</p>
 </header>
 
 <h2>Zielreihenfolge · 16 Slides</h2>
@@ -176,44 +177,43 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
   <span class="where">nach „Market Size“, vor „Team“</span>
 </div>
 <div class="board"><div class="stage">
-  <p class="t hl" style="--x:54.7;--y:44.6;--w:720;--fs:27;--lh:1.15">How we earn. Priced per gate, recurring after&nbsp;go-live.</p>
+  <p class="t hl" style="--x:54.7;--y:44.6;--w:760;--fs:27;--lh:1.15">How we earn. Two lines, one delivery&nbsp;chain.</p>
   <p class="t tag" style="--x:654.5;--y:55.1;--w:249.8;--fs:10;--lh:1.22">Business model</p>
   <div class="rule" style="--x:54.7;--y:85.6;--w:849.6"></div>
-  <p class="t sub" style="--x:54.7;--y:103.7;--w:660;--fs:15;--lh:1.45">Customers buy the chain in three commitments. Each one is priced and signed before the next begins.</p>
+  <p class="t sub" style="--x:54.7;--y:103.7;--w:700;--fs:15;--lh:1.45">Customers buy a delivered application today, and license the platform once their own team can run the chain.</p>
   <div class="rule" style="--x:54.7;--y:161.2;--w:849.6"></div>
 
   <div class="vrule" style="--x:332.6;--y:180;--h:132"></div>
   <div class="vrule" style="--x:627.1;--y:180;--h:132"></div>
 
-  <p class="t lbl" style="--x:54.7;--y:180;--w:259.9;--fs:9;--lh:1.2">CONCEPT · GATES 1–3</p>
-  <p class="t lbl" style="--x:349.2;--y:180;--w:259.9;--fs:9;--lh:1.2">BUILD &amp; RELEASE · GATES 4–5</p>
-  <p class="t lbl" style="--x:643.7;--y:180;--w:259.9;--fs:9;--lh:1.2">OPERATE · GATE 6</p>
+  <p class="t lbl" style="--x:54.7;--y:180;--w:259.9;--fs:9;--lh:1.2">SERVICE · BUILD &amp; RELEASE</p>
+  <p class="t lbl" style="--x:349.2;--y:180;--w:259.9;--fs:9;--lh:1.2">SERVICE · OPERATE</p>
+  <p class="t lbl acc" style="--x:643.7;--y:180;--w:259.9;--fs:9;--lh:1.2">PLATFORM · LICENSE</p>
 
   <p class="t big" style="--x:54.7;--y:198;--w:259.9;--fs:28;--lh:1.25"><span class="fill">[ Fixpreis ]</span></p>
-  <p class="t big" style="--x:349.2;--y:198;--w:259.9;--fs:28;--lh:1.25"><span class="fill">[ Fixpreis ]</span></p>
-  <p class="t big" style="--x:643.7;--y:198;--w:259.9;--fs:28;--lh:1.25"><span class="fill">[ pro Monat ]</span></p>
+  <p class="t big" style="--x:349.2;--y:198;--w:259.9;--fs:28;--lh:1.25"><span class="fill">[ pro Monat ]</span></p>
+  <p class="t big" style="--x:643.7;--y:198;--w:259.9;--fs:28;--lh:1.25"><span class="fill">[ pro Jahr ]</span></p>
 
   <div class="crule" style="--x:54.7;--y:250;--w:259.9"></div>
   <div class="crule" style="--x:349.2;--y:250;--w:259.9"></div>
   <div class="crule" style="--x:643.7;--y:250;--w:259.9"></div>
 
-  <p class="t desc" style="--x:54.7;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Discovery to signed concept. Fixed fee, paid before any build budget moves. This is also how we qualify.</p>
-  <p class="t desc" style="--x:349.2;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Fixed price, scoped from the signed concept. No open-ended time and materials, because the concept is specified.</p>
-  <p class="t desc" style="--x:643.7;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Recurring. Monitoring, evolution, support. The audit trail stays live as long as the software runs.</p>
+  <p class="t desc" style="--x:54.7;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Fixed price per application, scoped from the signed concept. Gates 1&ndash;5. No open-ended time and materials.</p>
+  <p class="t desc" style="--x:349.2;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Monthly retainer. Gate 6: monitoring, evolution, support. The audit trail stays live as long as the software runs.</p>
+  <p class="t desc" style="--x:643.7;--y:264;--w:259.9;--fs:10.5;--lh:1.5">Annual subscription for teams that run the chain themselves. Same gates, same audit trail, their engineers.</p>
 
   <div class="rule" style="--x:54.7;--y:334;--w:849.6"></div>
 
-  <p class="t lbl" style="--x:54.7;--y:350;--w:300;--fs:9;--lh:1.2">AVERAGE CONTRACT VALUE · 5 YEARS</p>
-  <p class="t big" style="--x:54.7;--y:366;--w:280;--fs:26;--lh:1.25"><span class="fill">[ Wert ]</span></p>
-  <p class="t desc" style="--x:349.2;--y:352;--w:554.1;--fs:10.5;--lh:1.5">This is the number the market slide already assumes: 250 customers × $600k. Right now it only exists as a footnote under the SOM. State it here, where an investor expects to find it.</p>
+  <p class="t lbl" style="--x:54.7;--y:350;--w:300;--fs:9;--lh:1.2">WHY BOTH LINES</p>
+  <p class="t card-h" style="--x:54.7;--y:366;--w:849.6;--fs:15;--lh:1.5">Delivery proves the chain and funds the company. The license is what scales it past our own delivery capacity.</p>
 
   <div class="rule" style="--x:54.7;--y:420.4;--w:849.6"></div>
-  <p class="t take" style="--x:54.7;--y:434.9;--w:849.6;--fs:12;--lh:1.45">Delivery cost falls with every build. <b>The engineering library is the margin.</b></p>
+  <p class="t take" style="--x:54.7;--y:434.9;--w:849.6;--fs:12;--lh:1.45">Delivery cost falls with every build. <b>The engineering library is the margin, and the license is the leverage.</b></p>
 
   <div class="logo"><span class="mark">↗</span>AthenaRun</div>
   <div class="pgnum">12</div>
 </div></div>
-<p class="note"><strong>Achtung, inhaltlicher Widerspruch im Deck:</strong> Die Traction-Slide nennt <code>7 LOIs</code> mit <code>€150K</code> Gesamtwert — rund <code>€21k</code> pro Kunde. Die Markt-Slide rechnet mit <code>$600k</code> pro Kunde. Das ist Faktor 28. Entweder decken die LOIs nur die Concept-Phase ab (dann sollte genau das dranstehen), oder eine der beiden Zahlen muss angepasst werden. Auf dieser Slide wird ein Investor das prüfen.</p>
+<p class="note">Zwei Linien, weil ihr beides verkauft: Festpreis-Delivery mit Betriebs-Retainer, und die Plattform-Lizenz für Teams, die die Kette selbst fahren. Die Reihenfolge auf der Slide ist bewusst gewählt — Delivery zuerst, weil das heute den Umsatz macht, Lizenz als dritte Spalte im Akzent, weil das die Skalierungs-Story ist. Die drei Preisfelder sind das Einzige, was noch fehlt.</p>
 
 <!-- ============ SLIDE 14 : THE ASK ============ -->
 <div class="slidecap">
@@ -222,10 +222,10 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
   <span class="where">nach „Team“, vor dem Closing</span>
 </div>
 <div class="board"><div class="stage">
-  <p class="t hl" style="--x:54.7;--y:44.6;--w:760;--fs:27;--lh:1.15">The ask. <span class="fill">[ Betrag ]</span> to make a proven engine&nbsp;repeatable.</p>
+  <p class="t hl" style="--x:54.7;--y:44.6;--w:760;--fs:27;--lh:1.15">The ask. <span class="prop">€500k</span> to make the engine&nbsp;repeatable.</p>
   <p class="t tag" style="--x:654.5;--y:55.1;--w:249.8;--fs:10;--lh:1.22">The ask</p>
   <div class="rule" style="--x:54.7;--y:85.6;--w:849.6"></div>
-  <p class="t sub" style="--x:54.7;--y:103.7;--w:700;--fs:15;--lh:1.45"><span class="fill">[ Runde ]</span> round, <span class="fill">[ Instrument ]</span>. <span class="fill">[ Monate ]</span> months of runway to <span class="fill">[ Meilenstein ]</span>.</p>
+  <p class="t sub" style="--x:54.7;--y:103.7;--w:700;--fs:15;--lh:1.45">Pre-seed round, <span class="fill">[ Instrument ]</span>. <span class="fill">[ Monate ]</span> months of runway to <span class="fill">[ Meilenstein ]</span>.</p>
   <div class="rule" style="--x:54.7;--y:143.9;--w:849.6"></div>
 
   <p class="t sect" style="--x:54.7;--y:161;--w:400;--fs:11;--lh:1.2">USE OF FUNDS</p>
@@ -239,10 +239,14 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
   <p class="t lbl" style="--x:481.0;--y:190;--w:194.4;--fs:9;--lh:1.2">GO-TO-MARKET</p>
   <p class="t lbl" style="--x:694.1;--y:190;--w:194.4;--fs:9;--lh:1.2">COMPLIANCE &amp; INFRA</p>
 
-  <p class="t big" style="--x:54.7;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="fill">[ % ]</span></p>
-  <p class="t big" style="--x:267.8;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="fill">[ % ]</span></p>
-  <p class="t big" style="--x:481.0;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="fill">[ % ]</span></p>
-  <p class="t big" style="--x:694.1;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="fill">[ % ]</span></p>
+  <p class="t big" style="--x:54.7;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="prop">40%</span></p>
+  <p class="t desc" style="--x:54.7;--y:240;--w:194.4;--fs:11;--lh:1.2"><span class="prop">€200k</span></p>
+  <p class="t big" style="--x:267.8;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="prop">25%</span></p>
+  <p class="t desc" style="--x:267.8;--y:240;--w:194.4;--fs:11;--lh:1.2"><span class="prop">€125k</span></p>
+  <p class="t big" style="--x:481.0;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="prop">25%</span></p>
+  <p class="t desc" style="--x:481.0;--y:240;--w:194.4;--fs:11;--lh:1.2"><span class="prop">€125k</span></p>
+  <p class="t big" style="--x:694.1;--y:208;--w:194.4;--fs:26;--lh:1.25"><span class="prop">10%</span></p>
+  <p class="t desc" style="--x:694.1;--y:240;--w:194.4;--fs:11;--lh:1.2"><span class="prop">€50k</span></p>
 
   <div class="crule" style="--x:54.7;--y:252;--w:194.4"></div>
   <div class="crule" style="--x:267.8;--y:252;--w:194.4"></div>
@@ -264,6 +268,7 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
   <div class="logo"><span class="mark">↗</span>AthenaRun</div>
   <div class="pgnum">14</div>
 </div></div>
+<p class="note"><strong>€500k Pre-Seed ist eingetragen, die Aufteilung ist ein Vorschlag</strong> (rot gepunktet = prüfen und überschreiben). 40/25/25/10 ist für eine Pre-Seed mit fertigem MVP und sieben LOIs eine übliche Größenordnung: das Gewicht liegt auf Engineering, weil die Engineering-Library euer Moat ist, und Delivery plus GTM zusammen auf der Hälfte, weil das Kapital die Nachfrage bedienen soll, die schon da ist. Bei drei Gründern in Frankfurt tragen €500k typischerweise 12–15 Monate — tragt eure echte Zahl ein.</p>
 <p class="note">Der Aufbau folgt dem Vier-Spalten-Raster eurer Traction-Slide (x = 54,7 / 267,8 / 481,0 / 694,1), damit beide als Paar gelesen werden: erst der Beweis, dann was das Kapital daraus macht. Die vier Verwendungszwecke sind aus dem Deck abgeleitet — Engineering-Library, Delivery-Kette, die sieben LOIs plus Channel-Partner, und die Compliance-Positionierung, mit der ihr euch von Lovable und Replit abgrenzt.</p>
 
 <!-- ============ SLIDE 15 : CLOSING ============ -->
@@ -300,7 +305,8 @@ h2{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:upperca
   <span><span class="sw" style="background:#D06D6B"></span>Akzent <code>#D06D6B</code></span>
   <span><span class="sw" style="background:#ECECEE; border:1px solid var(--page-line)"></span>Headline <code>#ECECEE</code></span>
   <span><span class="sw" style="background:#CAC9CE"></span>Fließtext <code>#CAC9CE</code></span>
-  <span><span class="sw" style="background:#C2A15C"></span>Platzhalter — muss raus</span>
+  <span><span class="sw" style="background:#C2A15C"></span>Platzhalter — muss von euch kommen</span>
+  <span><span class="sw" style="background:#D06D6B"></span>Vorschlag — prüfen und überschreiben</span>
 </div>
 <p class="note">Alle Farben und das Raster sind aus eurer Datei ausgelesen, nicht geschätzt. Die Slides hier sind in <strong>Poppins</strong> gesetzt — also so, wie das Deck aussehen soll. In eurer aktuellen Datei wird Poppins durch Helvetica ersetzt, weil die Schrift nicht installiert ist.</p>
 
