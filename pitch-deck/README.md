@@ -57,7 +57,19 @@ schlicht falsch gemessen.
 Auf Slide 12: die drei Preisfelder (`[ Fixpreis ]`, `[ pro Monat ]`,
 `[ pro Jahr ]`).
 Auf Slide 14: `[ Instrument ]`, die Laufzeit `[ 00 ]` Monate und
-`[ Meilenstein ]`. Die Aufteilung 40/25/25/10 ist ein Vorschlag.
+`[ Meilenstein ]`.
+
+Mittelverwendung auf Basis von €500k:
+
+| Posten | Anteil | Betrag |
+|---|---|---|
+| Engineering | 70 % | €350.000 |
+| Go-to-Market | 15 % | €75.000 |
+| Infrastructure & Compliance | 15 % | €75.000 |
+| **Summe** | **100 %** | **€500.000** |
+
+Delivery ist als eigener Posten entfallen; die Delivery-Kapazität steckt in
+der Engineering-Beschreibung.
 
 ## Offene Punkte im Deck
 
