@@ -1,90 +1,88 @@
 # Pitch Deck — Überarbeitung
 
-## Dateien
+## Datei
 
-| Datei | Inhalt |
-|---|---|
-| `AthenaRun_Pitch_Deck_reordered.key` | Das Original-Deck mit neuer Slide-Reihenfolge. Inhalte, Layouts und Bilder sind unverändert. |
-| `neue-slides.html` | Vier fehlende Slides als Entwurf im Raster und in der Typografie des Decks. |
-| `slides/AthenaRun_neue_Slides.pptx` | Dieselben vier Slides als **editierbare** Slides — in Keynote öffnen und per Copy-Paste ins Deck ziehen. |
-| `slides/AthenaRun_neue_Slides.pdf` | Dieselben vier Slides als PDF, 4 Seiten à 960×540 pt, in Poppins gesetzt. |
-| `slides/*.png` | Dieselben vier Slides einzeln, 1920×1080, zum direkten Einfügen in Keynote. |
+`AthenaRun_Pitch_Deck_15_Slides.pptx` — das vollständige Deck mit 15 Slides.
+Die zwölf bestehenden Slides sind unverändert aus dem Keynote-Export
+übernommen, die drei neuen sind an den richtigen Stellen eingesetzt.
 
-Die vier neuen Slides sind **nicht** in der `.key`-Datei enthalten — Keynote
-legt Objekt-IDs, Component-Index und Stylesheet-Referenzen an, die sich von
-außen nicht zuverlässig erzeugen lassen, ohne die Datei zu beschädigen. Die
-`.key` enthält die zwölf bestehenden Slides in neuer Reihenfolge.
-
-Der beste Weg für die vier neuen: `slides/AthenaRun_neue_Slides.pptx` in
-Keynote öffnen, im Foliennavigator alle vier markieren, kopieren, und in der
-`.key` an den richtigen Stellen einfügen. Das ergibt echte Keynote-Slides mit
-editierbaren Textfeldern, nicht eingeklebte Bilder. Die PNGs bleiben als
-Rückfallweg.
-
-Prüfung der PPTX in dieser Umgebung: Schema-Validierung bestanden, alle vier
-Slides über python-pptx gegengelesen, und jeder Textkasten gegen die echten
-Poppins-Metriken auf Überlauf geprüft (kein Befund). Eine Bildvorschau der
-PPTX war nicht möglich — die Umgebung hat nur `libreoffice-core` ohne
-Impress. Die identische Geometrie wurde stattdessen im Browser-Rendering in
-echtem Poppins geprüft.
-
-## Was an der .key-Datei geändert wurde
-
-Ausschließlich die Slide-Reihenfolge. Technisch: in `Index/Document.iwa` die
-geordnete Node-Liste des `KNSlideTreeArchive` (Objekt 6076, Feld 3) permutiert.
-14 Bytes geändert, alle innerhalb dieser Liste. Alle 74 übrigen Dateien im
-Keynote-Paket sind byteidentisch zum Original.
-
-| # | Slide | vorher |
+| # | Slide | |
 |---|---|---|
-| 1 | Cover | 1 |
-| 2 | The Problem | 3 |
-| 3 | The Cost | 2 |
-| 4 | Platform Process 1/2 | 4 |
-| 5 | Platform Process 2/2 | 5 |
-| 6 | Builds | 7 |
-| 7 | Traction | 11 |
-| 8 | The Compounding Loop | 6 |
-| 9 | Competitive Map | 9 |
-| 10 | Market Size | 8 |
-| 11 | Team | 10 |
-| 12 | Closing | 12 |
+| 1 | Cover | |
+| 2 | The Problem | |
+| 3 | The Cost | |
+| 4 | **The Solution** | neu |
+| 5 | Platform Process 1/2 | |
+| 6 | Platform Process 2/2 | |
+| 7 | Builds | |
+| 8 | Traction | |
+| 9 | The Compounding Loop | |
+| 10 | Competitive Map | |
+| 11 | Market Size | |
+| 12 | **Business Model** | neu |
+| 13 | Team | |
+| 14 | **The Ask & Use of Funds** | neu |
+| 15 | Closing | |
 
-Begründung: Die Problem-Slide endet mit der Kausalkette „… → lost EBIT", die
-Cost-Slide setzt genau dort an — vorher stand die Antwort vor der Frage.
-Traction stand auf Position 11 von 12; die stärksten Belege (7 LOIs,
-Channel-Partner, drei Programme) waren damit hinter dem Punkt, an dem die
-meisten Leser aufhören. Der Compounding Loop liest sich als Moat-Argument
-direkt vor der Competitive Map, weil er dort mit deren Schlusssatz
-zusammenfällt.
+## Wie die neuen Slides gebaut sind
 
-## Offene Punkte
+Nicht nachgebaut, sondern **dupliziert**: „The Solution" und „The Ask" sind
+Kopien der Traction-Slide (Vier-Spalten-Raster), „Business Model" ist eine
+Kopie der Market-Size-Slide (Drei-Spalten-Raster). Getauscht wurden nur die
+Texte und einzelne Positionen. Dadurch erben sie Schriften, Farben,
+Hintergrundbild und Logo exakt aus dem Original.
 
-**Schriften.** Das Deck fordert an 47 Stellen Poppins an, aufgelöst wird
-Helvetica — die Schrift ist nicht installiert. Dazu Altlasten aus dem
-PPTX-Import: Arial (54 Stile), Courier New (15), Calibri (13). Poppins
-installieren, die Theme-Stile für Tabellen und Diagramme angleichen, und für
-die Einreichung als PDF exportieren (Keynote bettet keine Schriften ein).
+Das Designsystem, wie es im Export tatsächlich steht:
 
-**Fehlende Slides.** Solution (Pos. 4), Business Model (Pos. 12), The Ask &
-Use of Funds (Pos. 14), Closing & Contact (Pos. 15). Entwürfe in
-`neue-slides.html`. Gelb markiert = fehlt noch und muss von euch kommen.
-Rot gepunktet = Vorschlag, prüfen und überschreiben.
+| Element | Schrift | Größe | Farbe |
+|---|---|---|---|
+| Headline | Poppins Bold | 27 | `ECECEE`, zweiter Satz `9A9AA2` |
+| Slide-Tag oben rechts | **Courier New** | 11 | `9A9AA2` |
+| Sub-Zeile | Poppins | 18 | `9A9AA2`, Zeilenabstand 135 % |
+| Sektions- und Spaltenlabel | **Courier New** | 9–10 | `9A9AA2` |
+| Kartentitel | Poppins Bold | 17 | `ECECEE` |
+| Große Zahl | Poppins Regular | 38 | `ECECEE`, Akzent `FF6B3D` |
+| Beschreibung | Poppins | 11 | `9A9AA2`, Zeilenabstand 135 % |
+| Trennlinien | | 1 pt | `2B2B2D` |
+| Bar-Fläche | | | `161619` |
+| Hintergrund | | | `0E0E11` |
 
-Stand der Zahlen: Runde ist auf €500k Pre-Seed gesetzt, die Aufteilung der
-Mittel (40/25/25/10) ist ein Vorschlag. Offen sind Instrument, Runway,
-Meilensteine, die drei Preisfelder im Business Model sowie E-Mail, Telefon
-und Website auf der Closing-Slide.
+Zwei Dinge, die im ersten Entwurf falsch waren: die Uppercase-Label sind
+**Courier New**, nicht Poppins, und der Akzent ist **`FF6B3D`** (orange). Das
+Rosé aus dem ersten Entwurf stammte aus einem JPEG-Vorschaubild und war
+schlicht falsch gemessen.
 
-Das Business Model bildet zwei Umsatzlinien ab: Festpreis-Delivery plus
-Betriebs-Retainer, und daneben die Plattform-Lizenz für Teams, die die Kette
-selbst fahren.
+## Noch einzutragen
+
+Auf Slide 12: die drei Preisfelder (`[ Fixpreis ]`, `[ pro Monat ]`,
+`[ pro Jahr ]`).
+Auf Slide 14: `[ Instrument ]`, die Laufzeit `[ 00 ]` Monate und
+`[ Meilenstein ]`. Die Aufteilung 40/25/25/10 ist ein Vorschlag.
+
+## Offene Punkte im Deck
+
+**Kontaktdaten.** Die Closing-Slide hat keine E-Mail, keine Website, keinen
+nächsten Schritt.
+
+**Ohne Quelle.** Die beiden stärksten Zahlen — 61 % ohne EBIT-Impact, 50 % der
+Pilots — stehen ohne Beleg.
+
+**Widerspruch.** Traction nennt 7 LOIs mit €150K Gesamtwert (≈ €21k pro
+Kunde), die Markt-Slide rechnet mit $600k pro Kunde.
 
 **Cover.** Gerades Apostroph in „Germany's" gegen typografische Apostrophe im
-Rest des Decks. Die spitzen Klammern um „Software Implementation & Delivery
-Infrastructure" prüfen — falls kein Stilmittel, entfernen. Außerdem liegen auf
-dem Cover zwei Textboxen („The bottleneck has moved …", „We build the chain,
-not the generator.") die in Keynotes eigenem Vorschaubild nicht erscheinen.
+Rest. Die spitzen Klammern um „Software Implementation & Delivery
+Infrastructure" prüfen.
 
-**Ohne Quelle.** Die beiden stärksten Zahlen im Deck — 61 % ohne EBIT-Impact,
-50 % der Pilots — stehen ohne Beleg. Fußnote oder Appendix.
+**Poppins muss installiert sein**, sonst fällt das ganze Deck auf Helvetica
+zurück — kostenlos bei Google Fonts.
+
+## Prüfung
+
+`validate.py` bestanden. Alle drei neuen Slides gegengelesen und mit einem
+eigenen Renderer aus dem Slide-XML gegen die Originalslides verglichen
+(LibreOffice Impress ist in dieser Umgebung nicht installiert). Dabei
+gefunden und behoben: „€500k" kollidierte mit seinem Label, weil die erste
+KPI-Kachel im Original für eine einstellige Zahl gebaut ist; der Bar-Text auf
+Slide 12 lief über zwei Zeilen aus der Fläche; der Spaltenblock saß zu dicht
+unter der Trennlinie. Vorschauen in `slides/`.
