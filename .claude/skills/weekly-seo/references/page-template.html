@@ -1,0 +1,125 @@
+<!-- Copy this file to content/<slug>.html and fill every {{...}}.
+     Delete this comment. Matches the AthenaRun homepage: dark, Inter, #FF5533. -->
+<html lang="{{en|de}}" class="scroll-smooth"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{Exact search phrase}} | AthenaRun</title>
+  <meta name="description" content="{{One-sentence answer containing the search phrase.}}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://athenarun.com/{{slug}}">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://athenarun.com/{{slug}}">
+  <meta property="og:title" content="{{Exact search phrase}}">
+  <meta property="og:description" content="{{Same one-sentence answer.}}">
+  <meta property="og:image" content="https://athenarun.com/og-image.jpg">
+  <meta property="og:site_name" content="AthenaRun">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="{{Exact search phrase}}">
+  <meta property="twitter:description" content="{{Same one-sentence answer.}}">
+  <meta property="twitter:image" content="https://athenarun.com/og-image.jpg">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": "{{Exact search phrase}}",
+        "description": "{{One-sentence answer.}}",
+        "datePublished": "{{YYYY-MM-DD}}",
+        "dateModified": "{{YYYY-MM-DD}}",
+        "mainEntityOfPage": "https://athenarun.com/{{slug}}",
+        "author": { "@type": "Organization", "name": "AthenaRun", "url": "https://athenarun.com" },
+        "publisher": { "@id": "https://athenarun.com/#organization" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "{{Question people actually type}}",
+            "acceptedAnswer": { "@type": "Answer", "text": "{{40-60 word standalone answer.}}" }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .quotable {
+      border-left: 2px solid #FF5533;
+      padding-left: 1rem;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: #f1f5f9;
+    }
+    .prose-athena h2 { font-size: 1.5rem; font-weight: 600; color: #fff; margin: 2.5rem 0 0.75rem; }
+    .prose-athena p { color: #94a3b8; margin-bottom: 1rem; line-height: 1.75; }
+    .prose-athena a { color: #FF5533; text-decoration: underline; text-underline-offset: 3px; }
+    .prose-athena table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .prose-athena th, .prose-athena td { border: 1px solid rgba(255,255,255,0.08); padding: 0.65rem 0.85rem; text-align: left; color: #cbd5e1; }
+    .prose-athena th { color: #fff; font-weight: 500; background: rgba(255,255,255,0.03); }
+    ::selection { background: rgba(255, 85, 51, 0.25); color: #fff; }
+  </style>
+</head>
+<body class="bg-[#0a0a0c] text-slate-300 antialiased">
+
+  <header class="border-b border-white/5">
+    <nav class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="/" class="text-white font-medium tracking-tight">AthenaRun</a>
+      <a href="/#contact" class="text-sm px-4 py-2 rounded-lg bg-[#FF5533] text-white font-medium">Request Demo</a>
+    </nav>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-14">
+    <!-- Breadcrumb: buying post -> pillar. Anchor text = the search phrase. -->
+    <p class="text-xs text-slate-500 mb-6">
+      <a href="/" class="hover:text-slate-300">Home</a> ›
+      <a href="/{{pillar-slug}}" class="hover:text-slate-300">{{pillar keyword}}</a>
+    </p>
+
+    <h1 class="text-3xl sm:text-4xl font-semibold text-white leading-tight mb-6">{{Exact search phrase}}</h1>
+
+    <!-- THE QUOTABLE LINE. One sentence. Standalone. True. -->
+    <p class="quotable mb-8">{{The one sentence you want an AI answer to lift verbatim.}}</p>
+
+    <div class="prose-athena">
+      <p>{{Direct answer in the first 100 words — conclusion first, reasoning after.}}</p>
+
+      <h2>{{H2 phrased as the question people ask}}</h2>
+      <p>{{...}}</p>
+
+      <h2>{{Comparison — required for best/top/vs/alternative keywords}}</h2>
+      <table>
+        <thead><tr><th>Tool</th><th>Best for</th><th>Setup</th><th>Needs a developer</th></tr></thead>
+        <tbody>
+          <tr><td>AthenaRun</td><td>{{...}}</td><td>{{...}}</td><td>No</td></tr>
+          <tr><td>{{Competitor}}</td><td>{{honest strength}}</td><td>{{...}}</td><td>{{...}}</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Frequently asked</h2>
+      <p><strong class="text-white">{{Question}}</strong><br>{{40-60 word standalone answer, matching the FAQPage JSON-LD above.}}</p>
+
+      <h2>Next step</h2>
+      <!-- Step 3: link UP to the service page with the search phrase as anchor text. -->
+      <p>See how <a href="/">{{search phrase}}</a> works in practice, or
+         <a href="/#contact">request a demo</a>.</p>
+    </div>
+
+    <p class="text-xs text-slate-500 mt-12 pt-6 border-t border-white/5">Last updated {{YYYY-MM-DD}}</p>
+  </main>
+
+  <footer class="border-t border-white/5">
+    <div class="max-w-3xl mx-auto px-6 py-8 text-xs text-slate-500">
+      AthenaRun GmbH · Friedrich-Ebert-Anlage 36, 60325 Frankfurt am Main ·
+      <a href="mailto:hello@athenarun.ai" class="hover:text-slate-300">hello@athenarun.ai</a>
+    </div>
+  </footer>
+</body></html>
