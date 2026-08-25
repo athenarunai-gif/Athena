@@ -35,11 +35,28 @@
           "@type": "Organization",
           "@id": "https://athenarun.com/#organization",
           "name": "AthenaRun",
+          "legalName": "AthenaRun GmbH",
           "url": "https://athenarun.com",
           "logo": {
             "@type": "ImageObject",
             "url": "https://athenarun.com/logo.png"
           },
+          "email": "hello@athenarun.ai",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Friedrich-Ebert-Anlage 36",
+            "postalCode": "60325",
+            "addressLocality": "Frankfurt am Main",
+            "addressCountry": "DE"
+          },
+          "areaServed": "Worldwide",
+          "knowsAbout": [
+            "autonomous software creation",
+            "AI business applications",
+            "internal business apps without developers",
+            "no-code business software",
+            "business process automation"
+          ],
           "description": "AthenaRun provides autonomous software creation capabilities for business teams, generating production-ready AI applications without coding."
         },
         {
@@ -51,6 +68,97 @@
           "publisher": {
             "@id": "https://athenarun.com/#organization"
           }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://athenarun.com/#software",
+          "name": "AthenaRun",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web browser",
+          "url": "https://athenarun.com",
+          "publisher": {
+            "@id": "https://athenarun.com/#organization"
+          },
+          "description": "AthenaRun is an autonomous software creation platform that turns a written business goal into a production-ready business application \u2014 database, workflows, permissions and frontend \u2014 without developers.",
+          "featureList": [
+            "Goal-based application generation",
+            "Automatic database, workflow and permission generation",
+            "Deployment on your own servers or in the cloud",
+            "No code required, no developers required"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://athenarun.com/#faq",
+          "isPartOf": {
+            "@id": "https://athenarun.com/#website"
+          },
+          "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is AthenaRun?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AthenaRun is an autonomous software creation platform that turns a written business goal into a production-ready business application — database, workflows, permissions and frontend included — without developers. It is operated by AthenaRun GmbH in Frankfurt am Main, Germany."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is AthenaRun for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AthenaRun is built for business teams rather than engineering teams: HR and People Ops, Operations, Compliance and executive teams that need internal software but have no developer capacity. Business units build and run their own applications independently, without opening IT tickets."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is AthenaRun different from low-code platforms and AI app builders?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AthenaRun is not a low-code tool where you assemble components yourself, and not a prompt-to-prototype builder. You define a business goal, and AthenaRun autonomously generates the database, workflows, permissions and frontend as one complete application. The result is a running production system, not a scaffold you still have to finish."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need developers to use AthenaRun?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AthenaRun requires zero developers. Not a single line of code is needed to deploy an application, and because no one hand-writes the code, there is no technical debt to maintain afterwards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to build a business application with AthenaRun?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About one day, compared with roughly three months for a traditional development project. Once the goal is defined, generation runs automatically in the background and the application goes live on global infrastructure in under five minutes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is my data hosted — can AthenaRun run on our own servers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Applications built with AthenaRun can be hosted on your own servers or in the cloud, so teams with data-residency or internal hosting requirements keep control of where their data lives. AthenaRun is operated from Frankfurt am Main, Germany."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does AthenaRun cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can start with AthenaRun for free, with no credit card required and a free initial consultation. Compared with commissioning a traditional software build, AthenaRun reduces development cost per project by roughly 95%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is AthenaRun reliable enough for production use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Applications generated by AthenaRun run on global infrastructure that scales automatically, backed by a 99.9% uptime guarantee. Permissions and security are generated as part of every application, which is why AthenaRun is positioned as enterprise-ready rather than as a prototyping tool."
+          }
+        }
+          ]
         }
       ]
     }
@@ -177,6 +285,7 @@
                 <a href="#problem" class="hover:text-[#FF5533] transition-colors rounded-sm outline-none">Problem</a>
                 <a href="#solution" class="hover:text-[#FF5533] transition-colors rounded-sm outline-none">Solution</a>
                 <a href="#outcome" class="hover:text-[#FF5533] transition-colors rounded-sm outline-none">Outcomes</a>
+                <a href="#faq" class="hover:text-[#FF5533] transition-colors rounded-sm outline-none">FAQ</a>
             </div>
             <div class="flex items-center gap-4">
                 <a href="#login" class="text-sm font-normal hover:text-white transition-colors hidden sm:block rounded-sm outline-none">Log in</a>
@@ -761,6 +870,118 @@
                 </div>
             </div>
         </section>
+
+        <!-- FAQ / Answer Layer -->
+        <section id="faq" class="py-32 bg-[#050505] border-t border-white/5">
+            <div class="max-w-4xl mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-medium text-[#EEEEEE] mb-4 tracking-tight">Frequently asked questions about AthenaRun</h2>
+                <p class="text-[#AAAAAA] mb-12 max-w-2xl leading-relaxed">Straight answers on how AthenaRun builds production-ready business applications without developers.</p>
+                <div class="flex flex-col gap-4">
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">What is AthenaRun?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">AthenaRun is an autonomous software creation platform that turns a written business goal into a production-ready business application — database, workflows, permissions and frontend included — without developers. It is operated by AthenaRun GmbH in Frankfurt am Main, Germany.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">Who is AthenaRun for?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">AthenaRun is built for business teams rather than engineering teams: HR and People Ops, Operations, Compliance and executive teams that need internal software but have no developer capacity. Business units build and run their own applications independently, without opening IT tickets.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">How is AthenaRun different from low-code platforms and AI app builders?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">AthenaRun is not a low-code tool where you assemble components yourself, and not a prompt-to-prototype builder. You define a business goal, and AthenaRun autonomously generates the database, workflows, permissions and frontend as one complete application. The result is a running production system, not a scaffold you still have to finish.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">Do I need developers to use AthenaRun?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">No. AthenaRun requires zero developers. Not a single line of code is needed to deploy an application, and because no one hand-writes the code, there is no technical debt to maintain afterwards.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">How long does it take to build a business application with AthenaRun?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">About one day, compared with roughly three months for a traditional development project. Once the goal is defined, generation runs automatically in the background and the application goes live on global infrastructure in under five minutes.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">Where is my data hosted — can AthenaRun run on our own servers?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">Yes. Applications built with AthenaRun can be hosted on your own servers or in the cloud, so teams with data-residency or internal hosting requirements keep control of where their data lives. AthenaRun is operated from Frankfurt am Main, Germany.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">What does AthenaRun cost?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">You can start with AthenaRun for free, with no credit card required and a free initial consultation. Compared with commissioning a traditional software build, AthenaRun reduces development cost per project by roughly 95%.</p>
+                    </details>
+                    <details class="glass-card rounded-2xl px-6 group">
+                        <summary class="flex items-start justify-between gap-6 cursor-pointer py-6 list-none">
+                            <h3 class="text-base md:text-lg font-medium text-[#EEEEEE] tracking-tight">Is AthenaRun reliable enough for production use?</h3>
+                            <span aria-hidden="true" class="shrink-0 mt-1 text-[#666] group-open:text-[#FF5533] group-open:rotate-45 transition-transform duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                            </span>
+                        </summary>
+                        <p class="text-sm md:text-base text-[#AAAAAA] leading-relaxed pb-6 max-w-3xl">Yes. Applications generated by AthenaRun run on global infrastructure that scales automatically, backed by a 99.9% uptime guarantee. Permissions and security are generated as part of every application, which is why AthenaRun is positioned as enterprise-ready rather than as a prototyping tool.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!--
+            ============================================================
+            OPEN QUESTIONS - NOT PUBLISHED YET
+            ============================================================
+            These are high-intent buying questions in this category, but
+            AthenaRun has not stated the facts anywhere on this page, so
+            they are deliberately left unanswered rather than guessed.
+            Supply the facts and these move into the FAQ above and into
+            the FAQPage schema.
+
+            1. Do we own the generated code, and can we export it?
+               [ANSWER NEEDED]
+            2. Which compliance certifications does AthenaRun hold
+               (SOC 2 Type II, ISO 27001, GDPR DPA, HIPAA)?
+               [ANSWER NEEDED]
+            3. Is there an EU/Germany-only hosting region, and who is
+               the sub-processor?
+               [ANSWER NEEDED]
+            4. Does AthenaRun support SSO (SAML/OIDC), role-based access
+               control and audit logs?
+               [ANSWER NEEDED]
+            5. Which existing systems can AthenaRun connect to
+               (SAP, Personio, Microsoft 365, REST APIs, databases)?
+               [ANSWER NEEDED]
+            6. What are the actual pricing tiers, and what does the free
+               tier include?
+               [ANSWER NEEDED]
+            ============================================================
+        -->
 
         <!-- CTA Section -->
         <section class="md:py-48 overflow-hidden bg-black border-white/5 border-t pt-32 pb-32 relative" id="contact">

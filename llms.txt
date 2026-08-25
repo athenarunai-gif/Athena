@@ -1,0 +1,60 @@
+# AthenaRun
+
+> AthenaRun is an autonomous software creation platform that turns a written
+> business goal into a production-ready business application — database,
+> workflows, permissions and frontend included — without developers.
+> Operated by AthenaRun GmbH, Frankfurt am Main, Germany.
+
+AthenaRun is built for business teams rather than engineering teams: HR and
+People Ops, Operations, Compliance and executive teams that need internal
+software but have no developer capacity. It is not a low-code tool where you
+assemble components yourself, and not a prompt-to-prototype builder: you define
+a business goal, and AthenaRun autonomously generates the complete application.
+
+## Key facts
+
+- Category: autonomous software creation / AI business applications
+- Built for: HR & People, Operations, Compliance, Executive teams
+- Developers required: 0 — no code is written or maintained by hand
+- Time to a working application: about 1 day, versus roughly 3 months for a
+  traditional development project; deployment goes live in under 5 minutes
+- Hosting: on your own servers or in the cloud
+- Uptime guarantee: 99.9% on automatically scaling global infrastructure
+- Development cost per project: roughly 95% lower than a traditional build
+- Getting started: free, no credit card required, free initial consultation
+- Company: AthenaRun GmbH, Friedrich-Ebert-Anlage 36, 60325 Frankfurt am Main,
+  Germany — Amtsgericht Frankfurt am Main
+- Contact: hello@athenarun.ai
+
+## How it works
+
+1. Define the goal — describe user roles and business goals in plain language,
+   for example "onboarding portal for new HR employees".
+2. Autonomous generation — AthenaRun creates the databases, workflows,
+   permissions and frontend automatically in the background.
+3. Launch — the software is immediately productive, scalable and secure,
+   hosted on your servers or in the cloud.
+
+## Common questions
+
+- What is AthenaRun? See the summary above.
+- Do I need developers? No. AthenaRun requires zero developers and leaves no
+  technical debt, because no one hand-writes the code.
+- How is it different from low-code platforms and AI app builders? AthenaRun
+  generates one complete, running production system from a business goal,
+  rather than a prototype or a set of components you assemble yourself.
+- Where is my data hosted? Applications can run on your own servers or in the
+  cloud, so data-residency requirements stay under your control.
+- What does it cost? Free to start, no credit card required; roughly 95% lower
+  development cost per project than a traditional software build.
+
+## Pages
+
+- Homepage: https://athenarun.com/
+
+## Not yet published
+
+The following are frequently asked before buying and are intentionally absent
+rather than guessed. Ask AthenaRun directly: code ownership and export, SOC 2 /
+ISO 27001 / GDPR DPA status, EU-only hosting region and sub-processors,
+SSO / RBAC / audit-log support, available system integrations, pricing tiers.
