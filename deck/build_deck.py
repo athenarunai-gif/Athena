@@ -344,7 +344,7 @@ line(s4, L, 736, 900, 26,
 
 # ---- SLIDE 5 — the full lifecycle (new) -----------------------------------
 sl = new_slide()
-header(sl, "The full lifecycle.", "Six phases, eight stages, one chain.",
+header(sl, "The full lifecycle.", "Every phase has an agent.",
        "05 — Lifecycle")
 line(sl, L, 196, 1480, 76,
      [("Planning through maintenance — the classic software lifecycle, "
@@ -352,68 +352,65 @@ line(sl, L, 196, 1480, 76,
       ("human gate at every handover.", SUB, WHITE, SANS, True, None)],
      spacing=19)
 
-CX, CY, RAD, ND = 640, 622, 170, 72
+CX, CY, RAD, ND = 620, 650, 215, 88
 PHASES = ["Planning", "Analysis", "Design",
           "Implementation", "Testing", "Maintenance"]
 ANG = [-90, -30, 30, 90, 150, 210]
 pos = [(CX + RAD * math.cos(math.radians(a)),
         CY + RAD * math.sin(math.radians(a))) for a in ANG]
 
-for i in range(6):                                   # ring, then gates
+for i in range(6):
     x1, y1 = pos[i]
     x2, y2 = pos[(i + 1) % 6]
     segment(sl, x1, y1, x2, y2, RULE, 1)
     ang = math.degrees(math.atan2(y2 - y1, x2 - x1))
-    arrowhead(sl, x1 + (x2 - x1) * 0.74, y1 + (y2 - y1) * 0.74, ang, DIM, 12)
-    gate(sl, (x1 + x2) / 2, (y1 + y2) / 2, 14)
+    arrowhead(sl, x1 + (x2 - x1) * 0.76, y1 + (y2 - y1) * 0.76, ang, DIM, 14)
+    gate(sl, (x1 + x2) / 2, (y1 + y2) / 2, 16)
 
-for i, (x, y) in enumerate(pos):                     # nodes on top of the ring
+for i, (x, y) in enumerate(pos):
     shape(sl, MSO_SHAPE.OVAL, x - ND / 2, y - ND / 2, ND, ND,
           RGBColor(*BG), MUTED, 1.25)
-    line(sl, x - 40, y - 15, 80, 30,
-         [(f"{i + 1:02d}", 13, MUTED, MONO, False, 0.8)], align=PP_ALIGN.CENTER)
+    line(sl, x - 40, y - 16, 80, 32,
+         [(f"{i + 1:02d}", 14, MUTED, MONO, False, 0.8)], align=PP_ALIGN.CENTER)
 
 for i, ((x, y), name) in enumerate(zip(pos, PHASES)):
     if ANG[i] == -90:
-        line(sl, x - 170, y - ND / 2 - 46, 340, 32,
-             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+        line(sl, x - 200, y - ND / 2 - 48, 400, 34,
+             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
     elif ANG[i] == 90:
-        line(sl, x - 170, y + ND / 2 + 16, 340, 32,
-             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+        line(sl, x - 200, y + ND / 2 + 16, 400, 34,
+             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
     elif math.cos(math.radians(ANG[i])) > 0:
-        line(sl, x + ND / 2 + 18, y - 16, 300, 32,
-             [(name, STAGE, WHITE, SANS, False, None)])
+        line(sl, x + ND / 2 + 22, y - 17, 320, 34,
+             [(name, 18, WHITE, SANS, False, None)])
     else:
-        line(sl, x - ND / 2 - 318, y - 16, 300, 32,
-             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.RIGHT)
+        line(sl, x - ND / 2 - 342, y - 17, 320, 34,
+             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.RIGHT)
 
-line(sl, CX - 160, CY - 26, 320, 24,
-     [("ALL SIX PHASES", 10, MUTED, MONO, False, 3.0)], align=PP_ALIGN.CENTER)
-line(sl, CX - 160, CY + 2, 320, 34,
-     [("agent-run", 19, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+line(sl, CX - 200, CY - 30, 400, 26,
+     [("ALL SIX PHASES", 10, MUTED, MONO, False, 2.0)], align=PP_ALIGN.CENTER)
+line(sl, CX - 200, CY + 2, 400, 38,
+     [("agent-run", 21, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
 
-gate(sl, 402, 940, 14)
-line(sl, 422, 928, 600, 26,
+# right column: one agent per phase
+rect(sl, 1090, 330, 1, 600, DIV)
+line(sl, 1150, 344, 700, 26,
+     [("ONE AGENT PER PHASE", SECLABEL, MUTED, MONO, False, 2.5)])
+AGENTS = [("Planning agent", "scope from first conversation, feasibility and fit"),
+          ("Analysis agent", "cited, deep research into the requirements"),
+          ("Design agent", "architecture, checked at the compliance gate"),
+          ("Build agent", "implementation with code review"),
+          ("Test agent", "verification before the release approval"),
+          ("Operations agent", "monitoring, patterns back to the library")]
+for i, (name, what) in enumerate(AGENTS):
+    y = 400 + i * 88
+    line(sl, 1150, y, 659, 30, [(name, 16, WHITE, SANS, False, None)])
+    line(sl, 1150, y + 34, 659, 30,
+         [(what, 12.5, MUTED, SANS, False, None)])
+
+gate(sl, 1157, 946, 16)
+line(sl, 1180, 934, 640, 26,
      [("human gate at every handover", SECLABEL, MUTED, MONO, False, 1.5)])
-
-# right column: which chain stage covers which phase
-rect(sl, 1092, 330, 1, 570, DIV)
-line(sl, 1140, 340, 700, 26,
-     [("SDLC PHASE  ·  CHAIN STAGE", SECLABEL, MUTED, MONO, False, 2.5)])
-COVER = [("Planning", "01 Discover  ·  02 Analyze"),
-         ("Analysis", "03 Research"),
-         ("Design", "04 Compliance  ·  05 AI Memory"),
-         ("Implementation", "06 Build"),
-         ("Testing", "07 Release"),
-         ("Maintenance", "08 Operate")]
-for i, (phase, stages) in enumerate(COVER):
-    y = 400 + i * 84
-    line(sl, 1140, y - 2, 669, 30, [(phase, 16, WHITE, SANS, False, None)])
-    line(sl, 1140, y + 30, 669, 26,
-         [(stages, 11, MUTED, MONO, False, 0.8)])
-line(sl, 1140, 902, 669, 26,
-     [("All eight chain stages map onto the six classic phases.",
-       12, MUTED, SANS, False, None)])
 
 # ---- SLIDE 6 — our moat ---------------------------------------------------
 s5 = S[3]
