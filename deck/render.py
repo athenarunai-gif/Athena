@@ -6,6 +6,7 @@ display face, so text metrics here match PowerPoint; Courier stands in for the
 mono labels and runs slightly wider.
 """
 import io
+import math
 import sys
 
 from PIL import Image, ImageDraw, ImageFont
@@ -102,12 +103,21 @@ def render(path, out_prefix):
                     st = int(sh.auto_shape_type)   # OVAL=9, DIAMOND=4
                 except Exception:
                     st = int(sh.shape_type)
+                rot = sh.rotation or 0
+
+                def spin(pts):
+                    if not rot:
+                        return pts
+                    a = math.radians(rot)
+                    ox, oy = x + w / 2, y + h / 2
+                    return [(ox + (px - ox) * math.cos(a) - (py - oy) * math.sin(a),
+                             oy + (px - ox) * math.sin(a) + (py - oy) * math.cos(a))
+                            for px, py in pts]
+
                 if st == 7:                               # isosceles triangle
                     c = sh.fill.fore_color.rgb
-                    rot = sh.rotation or 0
-                    pts = ([(x + w/2, y), (x + w, y + h), (x, y + h)] if rot < 45
-                           else [(x + w, y + h/2), (x, y), (x, y + h)])
-                    d.polygon(pts, fill=(c[0], c[1], c[2]))
+                    d.polygon(spin([(x + w/2, y), (x + w, y + h), (x, y + h)]),
+                              fill=(c[0], c[1], c[2]))
                 elif st == 9:                             # oval
                     fc = sh.fill.fore_color.rgb
                     lc = sh.line.color.rgb
@@ -122,7 +132,8 @@ def render(path, out_prefix):
                               fill=(c[0], c[1], c[2]))
                 else:
                     c = sh.fill.fore_color.rgb
-                    d.rectangle([x, y, x + w, y + h], fill=(c[0], c[1], c[2]))
+                    d.polygon(spin([(x, y), (x + w, y), (x + w, y + h), (x, y + h)]),
+                              fill=(c[0], c[1], c[2]))
             except Exception:
                 pass
         img.save(f"{out_prefix}-{idx:02d}.png")

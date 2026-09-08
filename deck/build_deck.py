@@ -15,6 +15,7 @@ Slides are flat PNG exports; rebuilt slides get a regenerated background
 (flat #0E0E11 + the 44px dot grid) with native, editable text.
 Appendix slides are carried over untouched.
 """
+import math
 import zipfile
 
 from PIL import Image, ImageDraw
@@ -144,6 +145,22 @@ def logo(slide):
 def pic(slide, name, x, y, w, h):
     slide.shapes.add_picture(name, int(x) * PX, int(y) * PX,
                              int(w) * PX, int(h) * PX)
+
+
+def segment(slide, x1, y1, x2, y2, colour, thickness=1):
+    """A straight connector drawn as a thin rotated rectangle."""
+    length = math.hypot(x2 - x1, y2 - y1)
+    ang = math.degrees(math.atan2(y2 - y1, x2 - x1))
+    sh = shape(slide, MSO_SHAPE.RECTANGLE, (x1 + x2) / 2 - length / 2,
+               (y1 + y2) / 2 - thickness / 2, length, thickness, colour)
+    sh.rotation = ang
+    return sh
+
+
+def arrowhead(slide, x, y, ang, colour, size=13):
+    """Triangle centred on (x, y) pointing along ang (degrees, y down)."""
+    shape(slide, MSO_SHAPE.ISOSCELES_TRIANGLE, x - size / 2, y - size / 2,
+          size, size, colour, rot=ang + 90)
 
 
 def gate(slide, cx, cy, size=15):
@@ -325,10 +342,83 @@ rect(s4, L, 706, R - L, 1, RULE)
 line(s4, L, 736, 900, 26,
      [("PACKAGE TO RUNNING SOFTWARE", SECLABEL, MUTED, MONO, False, 3.0)])
 
-# ---- SLIDE 5 — our moat ---------------------------------------------------
+# ---- SLIDE 5 — the full lifecycle (new) -----------------------------------
+sl = new_slide()
+header(sl, "The full lifecycle.", "Six phases, eight stages, one chain.",
+       "05 — Lifecycle")
+line(sl, L, 196, 1480, 76,
+     [("Planning through maintenance — the classic software lifecycle, "
+       "run end to end by agents, with a ", SUB, MUTED, SANS, False, None),
+      ("human gate at every handover.", SUB, WHITE, SANS, True, None)],
+     spacing=19)
+
+CX, CY, RAD, ND = 640, 622, 170, 72
+PHASES = ["Planning", "Analysis", "Design",
+          "Implementation", "Testing", "Maintenance"]
+ANG = [-90, -30, 30, 90, 150, 210]
+pos = [(CX + RAD * math.cos(math.radians(a)),
+        CY + RAD * math.sin(math.radians(a))) for a in ANG]
+
+for i in range(6):                                   # ring, then gates
+    x1, y1 = pos[i]
+    x2, y2 = pos[(i + 1) % 6]
+    segment(sl, x1, y1, x2, y2, RULE, 1)
+    ang = math.degrees(math.atan2(y2 - y1, x2 - x1))
+    arrowhead(sl, x1 + (x2 - x1) * 0.74, y1 + (y2 - y1) * 0.74, ang, DIM, 12)
+    gate(sl, (x1 + x2) / 2, (y1 + y2) / 2, 14)
+
+for i, (x, y) in enumerate(pos):                     # nodes on top of the ring
+    shape(sl, MSO_SHAPE.OVAL, x - ND / 2, y - ND / 2, ND, ND,
+          RGBColor(*BG), MUTED, 1.25)
+    line(sl, x - 40, y - 15, 80, 30,
+         [(f"{i + 1:02d}", 13, MUTED, MONO, False, 0.8)], align=PP_ALIGN.CENTER)
+
+for i, ((x, y), name) in enumerate(zip(pos, PHASES)):
+    if ANG[i] == -90:
+        line(sl, x - 170, y - ND / 2 - 46, 340, 32,
+             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+    elif ANG[i] == 90:
+        line(sl, x - 170, y + ND / 2 + 16, 340, 32,
+             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+    elif math.cos(math.radians(ANG[i])) > 0:
+        line(sl, x + ND / 2 + 18, y - 16, 300, 32,
+             [(name, STAGE, WHITE, SANS, False, None)])
+    else:
+        line(sl, x - ND / 2 - 318, y - 16, 300, 32,
+             [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.RIGHT)
+
+line(sl, CX - 160, CY - 26, 320, 24,
+     [("ALL SIX PHASES", 10, MUTED, MONO, False, 3.0)], align=PP_ALIGN.CENTER)
+line(sl, CX - 160, CY + 2, 320, 34,
+     [("agent-run", 19, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+
+gate(sl, 402, 940, 14)
+line(sl, 422, 928, 600, 26,
+     [("human gate at every handover", SECLABEL, MUTED, MONO, False, 1.5)])
+
+# right column: which chain stage covers which phase
+rect(sl, 1092, 330, 1, 570, DIV)
+line(sl, 1140, 340, 700, 26,
+     [("SDLC PHASE  ·  CHAIN STAGE", SECLABEL, MUTED, MONO, False, 2.5)])
+COVER = [("Planning", "01 Discover  ·  02 Analyze"),
+         ("Analysis", "03 Research"),
+         ("Design", "04 Compliance  ·  05 AI Memory"),
+         ("Implementation", "06 Build"),
+         ("Testing", "07 Release"),
+         ("Maintenance", "08 Operate")]
+for i, (phase, stages) in enumerate(COVER):
+    y = 400 + i * 84
+    line(sl, 1140, y - 2, 669, 30, [(phase, 16, WHITE, SANS, False, None)])
+    line(sl, 1140, y + 30, 669, 26,
+         [(stages, 11, MUTED, MONO, False, 0.8)])
+line(sl, 1140, 902, 669, 26,
+     [("All eight chain stages map onto the six classic phases.",
+       12, MUTED, SANS, False, None)])
+
+# ---- SLIDE 6 — our moat ---------------------------------------------------
 s5 = S[3]
 header(s5, "Our moat.", "Every build makes the next one safer.",
-       "05 — The moat")
+       "06 — The moat")
 x = L
 for i, word in enumerate(["Build", "Capture", "Reuse"]):
     w = text_w(word, 22)
@@ -375,7 +465,7 @@ for i, (head, body) in enumerate([
 
 # ---- SLIDE 6 — references (placeholders kept) -----------------------------
 s6 = new_slide()
-header(s6, "References.", "Three builds, three problems.", "06 — References")
+header(s6, "References.", "Three builds, three problems.", "07 — References")
 line(s6, L, 208, 1400, 30,
      [("Shipped software, not pilots. Each one replaced a process that was "
        "running manually.", SUB, MUTED, SANS, False, None)])
@@ -400,7 +490,7 @@ line(s6, L, 828, 1500, 24,
 
 # ---- SLIDE 7 — one question ----------------------------------------------
 s7 = new_slide()
-header(s7, "One question.", "", "07 — One question")
+header(s7, "One question.", "", "08 — One question")
 line(s7, L, 292, 1400, 32,
      [("Ich lasse Ihnen eine Frage da, keinen Prospekt.",
        SUB, MUTED, SANS, False, None)])
@@ -420,18 +510,20 @@ line(s7, R - 700, 950, 700, 26,
 
 # ---- SLIDE 8 — appendix divider ------------------------------------------
 s8 = new_slide()
-header(s8, "Further questions.", "", "08 — Appendix")
+header(s8, "Further questions.", "", "09 — Appendix")
 
-for s in (s2, s3, s4, s5, s6, s7, s8):
+for s in (s2, s3, s4, sl, s5, s6, s7, s8):
     logo(s)
 
-# ---- reorder --------------------------------------------------------------
+# ---- reorder by identity, so adding a slide cannot shift the mapping ------
+desired = [S[0], s2, s3, s4, sl, s5, s6, s7, s8] + S[4:9]
 lst = prs.slides._sldIdLst
 ids = list(lst)
+current = list(prs.slides)
 for e in ids:
     lst.remove(e)
-for i in [0, 1, 2, 9, 3, 10, 11, 12, 4, 5, 6, 7, 8]:
-    lst.append(ids[i])
+for slide in desired:
+    lst.append(ids[current.index(slide)])
 
 prs.save(OUT)
 print(f"wrote {OUT}")
