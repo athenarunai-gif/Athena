@@ -25,7 +25,11 @@ warnings = []
 def font_for(r):
     name = (r.font.name or "Arial").lower()
     size = int((r.font.size.pt if r.font.size else 12) * 2)
-    path = MONO if "courier" in name else (SANS_B if r.font.bold else SANS)
+    if "helvetica" in name or "arial" in name:      # metric-compatible stand-in
+        path = ("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf" if r.font.bold
+                else "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf")
+    else:
+        path = MONO if "courier" in name else (SANS_B if r.font.bold else SANS)
     return ImageFont.truetype(path, size)
 
 
@@ -118,13 +122,14 @@ def render(path, out_prefix):
                     c = sh.fill.fore_color.rgb
                     d.polygon(spin([(x + w/2, y), (x + w, y + h), (x, y + h)]),
                               fill=(c[0], c[1], c[2]))
-                elif st == 9:                             # oval
-                    fc = sh.fill.fore_color.rgb
-                    lc = sh.line.color.rgb
-                    lw = max(1, int((sh.line.width.pt if sh.line.width else 1) * 2))
-                    d.ellipse([x, y, x + w, y + h],
-                              fill=(fc[0], fc[1], fc[2]),
-                              outline=(lc[0], lc[1], lc[2]), width=lw)
+                elif st == 9:                             # oval (fill and/or outline)
+                    try: fc = sh.fill.fore_color.rgb; fill = (fc[0], fc[1], fc[2])
+                    except Exception: fill = None
+                    try:
+                        lc = sh.line.color.rgb; outline = (lc[0], lc[1], lc[2])
+                        lw = max(1, int((sh.line.width.pt if sh.line.width else 1) * 2))
+                    except Exception: outline, lw = None, 0
+                    d.ellipse([x, y, x + w, y + h], fill=fill, outline=outline, width=lw)
                 elif st == 4:                             # diamond
                     c = sh.fill.fore_color.rgb
                     d.polygon([(x + w/2, y), (x + w, y + h/2),
