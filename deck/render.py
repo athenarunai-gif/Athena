@@ -131,9 +131,18 @@ def render(path, out_prefix):
                                (x + w/2, y + h), (x, y + h/2)],
                               fill=(c[0], c[1], c[2]))
                 else:
-                    c = sh.fill.fore_color.rgb
+                    try:
+                        c = sh.fill.fore_color.rgb
+                        fill = (c[0], c[1], c[2])
+                    except Exception:
+                        fill = None
+                    try:
+                        lc = sh.line.color.rgb
+                        outline = (lc[0], lc[1], lc[2])
+                    except Exception:
+                        outline = None
                     d.polygon(spin([(x, y), (x + w, y), (x + w, y + h), (x, y + h)]),
-                              fill=(c[0], c[1], c[2]))
+                              fill=fill, outline=outline)
             except Exception:
                 pass
         img.save(f"{out_prefix}-{idx:02d}.png")
