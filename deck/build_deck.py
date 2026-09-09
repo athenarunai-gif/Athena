@@ -178,8 +178,12 @@ def chip(slide, x, y, label, colour, pt=14, h=56, pad=44):
     return w
 
 
-def chain(slide, y, x0, x1, nodes, start_no=1, gates=False, node_d=76):
-    """Spine with numbered circular nodes, labels and optional gates between."""
+def chain(slide, y, x0, x1, nodes, start_no=1, gates=False, node_d=88,
+          numbers=True, icon_size=36):
+    """Spine of circular nodes, each carrying an icon; number above, label below.
+
+    nodes = [(name, sub, icon), ...]
+    """
     n = len(nodes)
     pitch = (x1 - x0) / n
     cx = [int(x0 + pitch / 2 + i * pitch) for i in range(n)]
@@ -189,14 +193,17 @@ def chain(slide, y, x0, x1, nodes, start_no=1, gates=False, node_d=76):
             gate(slide, cx[i] - pitch / 2, y)
         shape(slide, MSO_SHAPE.OVAL, cx[i] - node_d / 2, y - node_d / 2,
               node_d, node_d, RGBColor(*BG), MUTED, 1.25)
-        line(slide, cx[i] - 40, y - 15, 80, 30,
-             [(f"{start_no + i:02d}", 13, MUTED, MONO, False, 0.8)],
-             align=PP_ALIGN.CENTER)
-    for i, (name, sub) in enumerate(nodes):
+        pic(slide, nodes[i][2], cx[i] - icon_size / 2, y - icon_size / 2,
+            icon_size, icon_size)
+        if numbers:
+            line(slide, cx[i] - 40, y - node_d / 2 - 26, 80, 24,
+                 [(f"{start_no + i:02d}", 11, MUTED, MONO, False, 0.8)],
+                 align=PP_ALIGN.CENTER)
+    for i, (name, sub, _ic) in enumerate(nodes):
         line(slide, cx[i] - 160, y + node_d / 2 + 22, 320, 34,
              [(name, STAGE, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
         if sub:
-            line(slide, cx[i] - 160, y + node_d / 2 + 58, 320, 26,
+            line(slide, cx[i] - 160, y + node_d / 2 + 70, 320, 26,
                  [(sub, STAGE_SUB, MUTED, SANS, False, None)],
                  align=PP_ALIGN.CENTER)
     return cx, pitch
@@ -258,28 +265,29 @@ header(s2, "Still manual.", "And that is where the money goes.",
 line(s2, L, 232, 700, 26,
      [("STILL MANUAL", SECLABEL, MUTED, MONO, False, 3.0)])
 
+P = "ic-person-node.png"
 cx2, pitch2 = chain(s2, 366, L, R,
-                    [("Requirements", None), ("Feasibility", None),
-                     ("Compliance", None), ("Approval", None),
-                     ("Operations", None)])
-for i in range(1, 5):                       # friction stack in every gap
+                    [("Requirements", None, P), ("Feasibility", None, P),
+                     ("Compliance", None, P), ("Approval", None, P),
+                     ("Operations", None, P)], numbers=False)
+for i in range(1, 5):                       # friction sits between the steps
     gx = int(cx2[i] - pitch2 / 2)
     for j, ic in enumerate(["ic-handoff.png", "ic-doc.png", "ic-wait.png"]):
-        pic(s2, ic, gx - 41 + j * 30, 300, 22, 22)
+        pic(s2, ic, gx - 53 + j * 36, 353, 26, 26)
 
-line(s2, L, 492, 1500, 30,
+line(s2, L, 500, 1500, 30,
      [("Five steps around the code. Every one of them a handoff, "
        "a document, a wait.", BODY, MUTED, SANS, False, None)])
-rect(s2, L, 548, R - L, 1, RULE)
+rect(s2, L, 556, R - L, 1, RULE)
 
-line(s2, L, 578, 1500, 26,
+line(s2, L, 586, 1500, 26,
      [("THEY BOUGHT THE GENERATOR — THE CHAIN AROUND IT IS STILL MANUAL",
        SECLABEL, MUTED, MONO, False, 2.0)])
-tf = tf_at(s2, L, 612, 900, 130)
+tf = tf_at(s2, L, 620, 900, 130)
 p = tf.paragraphs[0]
 run(p, "61", BIG, ORANGE)
 run(p, "%", 24, MUTED)
-line(s2, L, 764, 1200, 30,
+line(s2, L, 772, 1200, 30,
      [("of organizations see no EBIT impact from AI",
        BODY, MUTED, SANS, False, None)])
 rect(s2, L, 812, R - L, 1, RULE)
@@ -302,9 +310,11 @@ line(s3, L, 196, 1480, 76,
        SUB, MUTED, SANS, False, None)], spacing=19)
 
 chain(s3, 440, L, R,
-      [("Discover", "from conversation"), ("Analyze", "scope + fit"),
-       ("Research", "cited, deep"), ("Compliance", "pre-build gate"),
-       ("AI Memory", "patterns carried in")], gates=True)
+      [("Discover", "from conversation", "ic-chat.png"),
+       ("Analyze", "scope + fit", "ic-search.png"),
+       ("Research", "cited, deep", "ic-book.png"),
+       ("Compliance", "pre-build gate", "ic-shield.png"),
+       ("AI Memory", "patterns carried in", "ic-db.png")], gates=True)
 
 gate(s3, L + 7, 622)
 line(s3, L + 26, 610, 700, 26,
@@ -333,8 +343,10 @@ line(s4, 110, 472, 380, 24,
      align=PP_ALIGN.CENTER)
 
 cx4, pitch4 = chain(s4, 440, 520, R,
-                    [("Build", "code + review"), ("Release", "human approval"),
-                     ("Operate", "monitoring")], start_no=6, gates=True)
+                    [("Build", "code + review", "ic-code.png"),
+                     ("Release", "human approval", "ic-ship.png"),
+                     ("Operate", "monitoring", "ic-gauge.png")],
+                    start_no=6, gates=True)
 gate(s4, 528, 440)
 
 # LEARN: an orthogonal feedback loop, not a swoosh
@@ -362,8 +374,9 @@ line(sl, L, 196, 1480, 76,
      spacing=19)
 
 CX, CY, RAD, ND = 620, 650, 215, 88
-PHASES = ["Planning", "Analysis", "Design",
-          "Implementation", "Testing", "Maintenance"]
+PHASES = [("Planning", "ic-target.png"), ("Analysis", "ic-search.png"),
+          ("Design", "ic-layout.png"), ("Implementation", "ic-code.png"),
+          ("Testing", "ic-checklist.png"), ("Maintenance", "ic-refresh.png")]
 ANG = [-90, -30, 30, 90, 150, 210]
 pos = [(CX + RAD * math.cos(math.radians(a)),
         CY + RAD * math.sin(math.radians(a))) for a in ANG]
@@ -379,22 +392,19 @@ for i in range(6):
 for i, (x, y) in enumerate(pos):
     shape(sl, MSO_SHAPE.OVAL, x - ND / 2, y - ND / 2, ND, ND,
           RGBColor(*BG), MUTED, 1.25)
-    line(sl, x - 40, y - 16, 80, 32,
-         [(f"{i + 1:02d}", 14, MUTED, MONO, False, 0.8)], align=PP_ALIGN.CENTER)
+    pic(sl, PHASES[i][1], x - 19, y - 19, 38, 38)
 
-for i, ((x, y), name) in enumerate(zip(pos, PHASES)):
+for i, ((x, y), (name, _ic)) in enumerate(zip(pos, PHASES)):
+    parts = [(f"{i + 1:02d}  ", 11, MUTED, MONO, False, 0.8),
+             (name, 18, WHITE, SANS, False, None)]
     if ANG[i] == -90:
-        line(sl, x - 200, y - ND / 2 - 48, 400, 34,
-             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+        line(sl, x - 200, y - ND / 2 - 48, 400, 34, parts, align=PP_ALIGN.CENTER)
     elif ANG[i] == 90:
-        line(sl, x - 200, y + ND / 2 + 16, 400, 34,
-             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.CENTER)
+        line(sl, x - 200, y + ND / 2 + 16, 400, 34, parts, align=PP_ALIGN.CENTER)
     elif math.cos(math.radians(ANG[i])) > 0:
-        line(sl, x + ND / 2 + 22, y - 17, 320, 34,
-             [(name, 18, WHITE, SANS, False, None)])
+        line(sl, x + ND / 2 + 22, y - 17, 320, 34, parts)
     else:
-        line(sl, x - ND / 2 - 342, y - 17, 320, 34,
-             [(name, 18, WHITE, SANS, False, None)], align=PP_ALIGN.RIGHT)
+        line(sl, x - ND / 2 - 342, y - 17, 320, 34, parts, align=PP_ALIGN.RIGHT)
 
 line(sl, CX - 200, CY - 30, 400, 26,
      [("ALL SIX PHASES", 10, MUTED, MONO, False, 2.0)], align=PP_ALIGN.CENTER)
@@ -439,8 +449,9 @@ arrowhead(sb, 962, 374, 0, DIM, 26)
 
 line(sb, 1040, 296, 700, 26,
      [("WITH ATHENARUN", SECLABEL, ORANGE, MONO, False, 2.5)])
-chip(sb, 1040, 346, "One developer", ORANGE, pt=15)
-line(sb, 1040, 424, 700, 26,
+w1 = chip(sb, 1040, 346, "One developer", ORANGE, pt=15)
+chip(sb, 1040 + w1 + 20, 346, "or a business user", ORANGE, pt=15)
+line(sb, 1040, 424, 760, 26,
      [("+ agents on all six lifecycle phases", 12.5, MUTED, SANS, False, None)])
 
 rect(sb, L, 520, R - L, 1, RULE)
@@ -448,22 +459,23 @@ rect(sb, L, 520, R - L, 1, RULE)
 BENEFITS = [
     ("ic-people.png", "Fewer roles per project",
      "Eliminates or reduces business analyst, designer and developer "
-     "headcount on every project."),
+     "headcount per project."),
     ("ic-person.png", "One developer, internally",
      "AthenaRun runs its own projects with a single developer."),
+    ("ic-window.png", "A business user can run it",
+     "The platform is operated by the business, not only by engineers."),
     ("ic-layers.png", "A head start on day one",
-     "Customers inherit validated best practices and documented failure "
-     "learnings from the first build."),
+     "Customers inherit best practices and documented failure learnings "
+     "from the first build."),
 ]
 for i, (ic, head, body) in enumerate(BENEFITS):
-    x = L + i * 570
-    pic(sb, ic, x, 566, 44, 44)
-    line(sb, x, 632, 520, 36, [(head, 18, WHITE, SANS, False, None)])
-    line(sb, x, 692, 520, 116,
-         [(body, 13, MUTED, SANS, False, None)], spacing=19)
+    y = 552 + i * 74
+    pic(sb, ic, L, y + 4, 34, 34)
+    line(sb, 166, y, 450, 42, [(head, 17, WHITE, SANS, False, None)])
+    line(sb, 640, y, 1169, 42, [(body, 13, MUTED, SANS, False, None)])
 
-rect(sb, L, 820, R - L, 1, RULE)
-line(sb, L, 852, 1560, 34,
+rect(sb, L, 830, R - L, 1, RULE)
+line(sb, L, 862, 1600, 34,
      [("Same scope, a fraction of the team.", 16, WHITE, SANS, True, None),
       ("  The library is what makes that safe.", 16, MUTED, SANS, False, None)])
 

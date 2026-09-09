@@ -110,12 +110,121 @@ def layers(name, size=36, col=MUTED):
     _save(im, name, size)
 
 
+# --- stage / phase glyphs, all drawn on the same 128px grid ---------------
+def chat(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.rounded_rectangle([16, 24, 112, 88], radius=16, outline=col, width=8)
+    d.polygon([(38, 86), (34, 112), (62, 86)], fill=col)
+    _save(im, name, size)
+
+
+def search(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.ellipse([20, 20, 88, 88], outline=col, width=8)
+    d.line([(84, 84), (110, 110)], fill=col, width=10)
+    _save(im, name, size)
+
+
+def book(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.line([(64, 34), (64, 104)], fill=col, width=8)
+    d.line([(64, 34), (20, 26), (20, 96), (64, 104)], fill=col, width=8, joint="curve")
+    d.line([(64, 34), (108, 26), (108, 96), (64, 104)], fill=col, width=8, joint="curve")
+    _save(im, name, size)
+
+
+def shield(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.line([(64, 16), (108, 34), (108, 70), (64, 112), (20, 70), (20, 34), (64, 16)],
+           fill=col, width=8, joint="curve")
+    d.line([(44, 62), (60, 78), (88, 46)], fill=col, width=9, joint="curve")
+    _save(im, name, size)
+
+
+def database(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.ellipse([20, 16, 108, 48], outline=col, width=8)
+    d.line([(20, 32), (20, 96)], fill=col, width=8)
+    d.line([(108, 32), (108, 96)], fill=col, width=8)
+    d.arc([20, 80, 108, 112], start=0, end=180, fill=col, width=8)
+    d.arc([20, 48, 108, 80], start=0, end=180, fill=col, width=8)
+    _save(im, name, size)
+
+
+def code(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.line([(46, 30), (14, 64), (46, 98)], fill=col, width=9, joint="curve")
+    d.line([(82, 30), (114, 64), (82, 98)], fill=col, width=9, joint="curve")
+    _save(im, name, size)
+
+
+def ship(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.line([(64, 108), (64, 34)], fill=col, width=9)
+    d.polygon([(64, 14), (92, 46), (36, 46)], fill=col)
+    d.line([(20, 112), (108, 112)], fill=col, width=8)
+    _save(im, name, size)
+
+
+def gauge(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.arc([16, 30, 112, 126], start=180, end=360, fill=col, width=8)
+    d.line([(64, 78), (92, 50)], fill=col, width=9)
+    d.ellipse([57, 71, 71, 85], fill=col)
+    _save(im, name, size)
+
+
+def target(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.ellipse([16, 16, 112, 112], outline=col, width=8)
+    d.ellipse([44, 44, 84, 84], outline=col, width=8)
+    d.ellipse([58, 58, 70, 70], fill=col)
+    _save(im, name, size)
+
+
+def layout(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.rectangle([18, 22, 110, 106], outline=col, width=8)
+    d.line([(18, 54), (110, 54)], fill=col, width=8)
+    d.line([(62, 54), (62, 106)], fill=col, width=8)
+    _save(im, name, size)
+
+
+def checklist(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.rectangle([24, 20, 104, 110], outline=col, width=8)
+    d.line([(40, 52), (52, 64), (86, 34)], fill=col, width=8, joint="curve")
+    d.line([(40, 84), (88, 84)], fill=col, width=7)
+    _save(im, name, size)
+
+
+def refresh(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.arc([20, 20, 108, 108], start=40, end=300, fill=col, width=8)
+    d.polygon([(96, 20), (116, 46), (84, 50)], fill=col)
+    _save(im, name, size)
+
+
+def window(name, size=40, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.rounded_rectangle([14, 22, 114, 100], radius=10, outline=col, width=8)
+    d.line([(14, 46), (114, 46)], fill=col, width=7)
+    d.polygon([(60, 58), (60, 96), (86, 80)], fill=col)
+    _save(im, name, size)
+
+
 def build_all():
     handoff("ic-handoff.png"); doc("ic-doc.png"); wait("ic-wait.png")
     chart("ic-chart.png"); funnel("ic-funnel.png"); bubble("ic-bubble.png")
     learn_arc("ic-arc.png")
     people("ic-people.png"); person("ic-person.png"); layers("ic-layers.png")
     person("ic-person-orange.png", col=ORANGE)
+    chat("ic-chat.png"); search("ic-search.png"); book("ic-book.png")
+    shield("ic-shield.png"); database("ic-db.png"); code("ic-code.png")
+    ship("ic-ship.png"); gauge("ic-gauge.png"); target("ic-target.png")
+    layout("ic-layout.png"); checklist("ic-checklist.png")
+    refresh("ic-refresh.png"); window("ic-window.png")
+    person("ic-person-node.png", size=40)
 
 
 if __name__ == "__main__":
