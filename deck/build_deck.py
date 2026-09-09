@@ -169,6 +169,15 @@ def gate(slide, cx, cy, size=15):
           size, size, ORANGE)
 
 
+def chip(slide, x, y, label, colour, pt=14, h=56, pad=44):
+    """A rounded role tag, sized to its label."""
+    w = text_w(label, pt) + pad * 2
+    shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, x, y, w, h, PANEL, colour, 1.25)
+    line(slide, x, y, w, h, [(label, pt, colour, SANS, False, None)],
+         align=PP_ALIGN.CENTER)
+    return w
+
+
 def chain(slide, y, x0, x1, nodes, start_no=1, gates=False, node_d=76):
     """Spine with numbered circular nodes, labels and optional gates between."""
     n = len(nodes)
@@ -412,10 +421,56 @@ gate(sl, 1157, 946, 16)
 line(sl, 1180, 934, 640, 26,
      [("human gate at every handover", SECLABEL, MUTED, MONO, False, 1.5)])
 
+# ---- SLIDE 6 — the payoff (new) -------------------------------------------
+sb = new_slide()
+header(sb, "The payoff.", "Fewer people. A better starting point.",
+       "06 — The payoff")
+line(sb, L, 196, 1520, 40,
+     [("The chain does the work that used to need a team — every project "
+       "starts on what the last one learned.", SUB, MUTED, SANS, False, None)])
+
+line(sb, L, 296, 700, 26,
+     [("A TYPICAL PROJECT TEAM", SECLABEL, MUTED, MONO, False, 2.5)])
+x = L
+for role in ["Business Analyst", "Designer", "Developer"]:
+    x += chip(sb, x, 346, role, MUTED) + 20
+
+arrowhead(sb, 962, 374, 0, DIM, 26)
+
+line(sb, 1040, 296, 700, 26,
+     [("WITH ATHENARUN", SECLABEL, ORANGE, MONO, False, 2.5)])
+chip(sb, 1040, 346, "One developer", ORANGE, pt=15)
+line(sb, 1040, 424, 700, 26,
+     [("+ agents on all six lifecycle phases", 12.5, MUTED, SANS, False, None)])
+
+rect(sb, L, 520, R - L, 1, RULE)
+
+BENEFITS = [
+    ("ic-people.png", "Fewer roles per project",
+     "Eliminates or reduces business analyst, designer and developer "
+     "headcount on every project."),
+    ("ic-person.png", "One developer, internally",
+     "AthenaRun runs its own projects with a single developer."),
+    ("ic-layers.png", "A head start on day one",
+     "Customers inherit validated best practices and documented failure "
+     "learnings from the first build."),
+]
+for i, (ic, head, body) in enumerate(BENEFITS):
+    x = L + i * 570
+    pic(sb, ic, x, 566, 44, 44)
+    line(sb, x, 632, 520, 36, [(head, 18, WHITE, SANS, False, None)])
+    line(sb, x, 692, 520, 116,
+         [(body, 13, MUTED, SANS, False, None)], spacing=19)
+
+rect(sb, L, 820, R - L, 1, RULE)
+line(sb, L, 852, 1560, 34,
+     [("Same scope, a fraction of the team.", 16, WHITE, SANS, True, None),
+      ("  The library is what makes that safe.", 16, MUTED, SANS, False, None)])
+
 # ---- SLIDE 6 — our moat ---------------------------------------------------
 s5 = S[3]
 header(s5, "Our moat.", "Every build makes the next one safer.",
-       "06 — The moat")
+       "07 — The moat")
 x = L
 for i, word in enumerate(["Build", "Capture", "Reuse"]):
     w = text_w(word, 22)
@@ -462,7 +517,7 @@ for i, (head, body) in enumerate([
 
 # ---- SLIDE 6 — references (placeholders kept) -----------------------------
 s6 = new_slide()
-header(s6, "References.", "Three builds, three problems.", "07 — References")
+header(s6, "References.", "Three builds, three problems.", "08 — References")
 line(s6, L, 208, 1400, 30,
      [("Shipped software, not pilots. Each one replaced a process that was "
        "running manually.", SUB, MUTED, SANS, False, None)])
@@ -487,7 +542,7 @@ line(s6, L, 828, 1500, 24,
 
 # ---- SLIDE 7 — one question ----------------------------------------------
 s7 = new_slide()
-header(s7, "One question.", "", "08 — One question")
+header(s7, "One question.", "", "09 — One question")
 line(s7, L, 292, 1400, 32,
      [("Ich lasse Ihnen eine Frage da, keinen Prospekt.",
        SUB, MUTED, SANS, False, None)])
@@ -507,13 +562,13 @@ line(s7, R - 700, 950, 700, 26,
 
 # ---- SLIDE 8 — appendix divider ------------------------------------------
 s8 = new_slide()
-header(s8, "Further questions.", "", "09 — Appendix")
+header(s8, "Further questions.", "", "10 — Appendix")
 
-for s in (s2, s3, s4, sl, s5, s6, s7, s8):
+for s in (s2, s3, s4, sl, sb, s5, s6, s7, s8):
     logo(s)
 
 # ---- reorder by identity, so adding a slide cannot shift the mapping ------
-desired = [S[0], s2, s3, s4, sl, s5, s6, s7, s8] + S[4:9]
+desired = [S[0], s2, s3, s4, sl, sb, s5, s6, s7, s8] + S[4:9]
 lst = prs.slides._sldIdLst
 ids = list(lst)
 current = list(prs.slides)

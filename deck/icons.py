@@ -85,10 +85,37 @@ def learn_arc(name, w=1180, h=170, col=ORANGE):
     im.resize((w, h), Image.LANCZOS).save(name)
 
 
+def person(name, size=36, col=MUTED, cx=64):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    d.ellipse([cx - 20, 24, cx + 20, 64], outline=col, width=8)
+    d.arc([cx - 34, 72, cx + 34, 140], start=180, end=360, fill=col, width=8)
+    _save(im, name, size)
+
+
+def people(name, size=36, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    for cx, r in ((30, 13), (98, 13)):          # two behind
+        d.ellipse([cx - r, 30, cx + r, 30 + 2 * r], outline=col, width=7)
+        d.arc([cx - 24, 62, cx + 24, 110], start=180, end=360, fill=col, width=7)
+    d.ellipse([46, 20, 82, 56], outline=col, width=8)
+    d.arc([34, 62, 94, 122], start=180, end=360, fill=col, width=8)
+    _save(im, name, size)
+
+
+def layers(name, size=36, col=MUTED):
+    im = _canvas(); d = ImageDraw.Draw(im)
+    for dy in (0, 38, 76):
+        d.polygon([(64, 18 + dy), (110, 34 + dy), (64, 50 + dy), (18, 34 + dy)],
+                  outline=col, width=7)
+    _save(im, name, size)
+
+
 def build_all():
     handoff("ic-handoff.png"); doc("ic-doc.png"); wait("ic-wait.png")
     chart("ic-chart.png"); funnel("ic-funnel.png"); bubble("ic-bubble.png")
     learn_arc("ic-arc.png")
+    people("ic-people.png"); person("ic-person.png"); layers("ic-layers.png")
+    person("ic-person-orange.png", col=ORANGE)
 
 
 if __name__ == "__main__":
