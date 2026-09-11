@@ -347,6 +347,24 @@ def move_shape(xml, text, new_y):
     return xml.replace(sp, fixed)
 
 
+def resize_shape(xml, needle, new_h):
+    """Change the height of the shape whose XML contains `needle` verbatim."""
+    m = re.search(r"<p:sp>(?:(?!</p:sp>).)*?" + re.escape(needle) + r".*?</p:sp>", xml, re.S)
+    assert m, f"no shape containing {needle!r}"
+    sp = m.group(0)
+    fixed = re.sub(r'(<a:ext cx="\d+" cy=")\d+(")',
+                   lambda o: o.group(1) + str(emu(new_h)) + o.group(2), sp, count=1)
+    return xml.replace(sp, fixed)
+
+
+def move_rect(xml, x, y, new_y):
+    """Shift a shape identified by its exact offset — for the deck's hairlines,
+    which carry no text to match on."""
+    key = f'<a:off x="{emu(x)}" y="{emu(y)}"/>'
+    assert xml.count(key) == 1, f"{xml.count(key)} shapes at ({x}, {y})"
+    return xml.replace(key, f'<a:off x="{emu(x)}" y="{emu(new_y)}"/>')
+
+
 def typography_pass():
     """Nine deviations found by auditing every run on slides 1-9: one foreign
     typeface, three off-scale sizes, one off-palette colour, two runs with no
@@ -374,6 +392,12 @@ def typography_pass():
     x = edit_runs(x, "61", size=5400)
     x = edit_runs(x, "50", size=3800)
     x = edit_runs(x, "%", size=2400)
+    # the 61 box was still dimensioned for 120pt, so the smaller figure floated
+    # half an inch below the 50 it is meant to be read against. Matching the
+    # right column's box height puts both figures on one baseline and lets the
+    # rule beneath them align too.
+    x = resize_shape(x, "<a:t>61</a:t>", 0.76)
+    x = move_rect(x, 0.76, 4.86, 3.90)
     open(path, "w", encoding="utf-8").write(x)
 
     # slide 5 in the file, position 7 — the section tag was never filled and two
