@@ -23,3 +23,7 @@ run does the same thing on its own and reports back the human to-do list.
 It does not publish, email, post, or upload. Recording the video, sending the
 outreach, posting the community answers, and reading Search Console are human steps —
 each run's `log.md` ends with exactly that list.
+
+## Deutsch
+
+[`WOCHENROUTINE.md`](WOCHENROUTINE.md) — Überblick über Skill, Trigger und die sechs Schritte.
