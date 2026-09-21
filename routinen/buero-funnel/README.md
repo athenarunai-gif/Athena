@@ -36,17 +36,25 @@ Erledigt:
   und der Arbeitsvertrag mit der Routine.
 - Drive-Ordner „Büro" mit Vorlagen/ und Archiv/ angelegt.
 - Neue Routine mit dem Cloud-Prompt angelegt, Zeitplan `0 8 * * 1-5`, deaktiviert.
+- Migrations-Prompt zusätzlich als Google Doc in Drive abgelegt
+  (`1LHtphE9h_rRLu_iSBCHhLgIiAy0AKPRcAKkZd30OpCA`), weil die Desktop-Sitzung
+  nicht an das Git-Repo kommt.
+- Migration am 21.09.2026 auf dem Mac gelaufen und gegengeprüft:
+  - Drive: CLAUDE.md und PROMPTS.md als `text/markdown` im Ordner „Büro",
+    7 Dateien in „Vorlagen" inklusive MEDDPICC_Fragenkatalog_Scorecard.xlsx.
+    Keine Umwandlung in Google Docs.
+  - Doc: 2 Kunden (Modulat Leasing AG, World Bank Group), 0 Investoren.
+    Leere Felder bei World Bank blieben leer. „Gelernt" enthält die Struktur
+    aus gelernt.md, noch ohne Einträge. Lokaler Ordner unverändert.
 
 Offen:
 
-1. Migration vom Mac: `migration-prompt.md` einmal in Claude Desktop auf dem Mac
-   ausführen, solange der Ordner „Büro" verbunden ist.
-2. Connectors an der neuen Routine: Slack, Google Drive und Claude Docs in der
+1. Connectors an der neuen Routine: Slack, Google Drive und Claude Docs in der
    Routinen-Oberfläche auf claude.ai ergänzen. Über die MCP-Werkzeuge geht das
    nicht — `create_trigger` lehnt den Parameter für diese Organisation ab, und
    `update_trigger` kennt ihn nicht. Die Routine steht sonst ohne Connectors da
    (`mcp_connections: []`) und kann weder Slack noch Drive noch das Doc erreichen.
-3. Neue Routine aktivieren, alte Routine deaktivieren — erst wenn 1 und 2 stehen.
+2. Neue Routine aktivieren, alte Routine deaktivieren — erst wenn 1 steht.
 
 ## Nicht übernommen
 
