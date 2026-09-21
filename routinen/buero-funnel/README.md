@@ -1,64 +1,74 @@
-# Büro-Funnel: Umzug der Ablage in die Cloud
+# Büro-Funnel: Ablage in der Cloud
 
-Die Morgen-Routine „Morgen: Funnel" lief bisher gegen den lokalen Ordner „Büro"
-auf dem Mac. Der Auslöser feuert zwar serverseitig, der Ordner ist aber nur
-erreichbar, solange Claude Desktop auf dem Mac läuft. Ziel: die Ablage liegt in
-der Cloud, die Routine läuft geräteunabhängig.
+Die Morgen-Routine „Morgen: Funnel" lief gegen den lokalen Ordner „Büro" auf
+dem Mac und stand still, sobald der Rechner aus war. Die Ablage liegt jetzt in
+Supabase, die Routine läuft geräteunabhängig.
 
-## Warum die Ablage geteilt ist
+## Warum Supabase und nicht Google Drive oder Claude Docs
 
-Der Google-Drive-Connector kann Dateien lesen und neu anlegen, aber den Inhalt
-bestehender Dateien nicht ersetzen (`update_file` ändert nur Titel und Ordner).
-Die Routine muss aber an Verläufe anhängen und den Zeitstempel überschreiben.
-Deshalb:
+Drei Anläufe, zwei Sackgassen:
 
-| Ort | Inhalt | Zugriff der Routine |
+1. **Google Drive** kann Dateien lesen und neu anlegen, aber den Inhalt
+   bestehender Dateien nicht ersetzen (`update_file` ändert nur Titel und
+   Ordner). Die Routine muss aber Verläufe fortschreiben.
+2. **Claude Docs** ist für dieses Konto kein installierbarer Connector. Ein
+   Diagnoselauf am 21.09.2026 hat es belegt: in der Routine-Sitzung standen
+   Slack (27 Werkzeuge), Google Drive (11) und Supabase (26) bereit, für
+   Claude Docs **null**. Der Eintrag in der Routine zeigt auf
+   `api.anthropic.com/v1/pages/mcp` und führt im Lauf zu nichts. Das ist weder
+   über Einstellungen noch über den Prompt zu beheben.
+3. **Supabase** ist ein Standard-Connector, wird im Lauf sauber geladen und
+   kann lesen und schreiben.
+
+## Aufbau
+
+Die Instanz ist geteilt und enthält in `public` die produktive App mit 85
+Tabellen. Die Ablage liegt deshalb in einem eigenen Schema.
+
+Projekt `zafbcpkfhtktohzjzkvj` (AthenaRun), Schema `buero`:
+
+| Tabelle | Inhalt | Routine |
 | --- | --- | --- |
-| Claude Doc „Büro – Funnel" | Stand, Kunden, Investoren | lesen und ergänzen |
-| Claude Doc „Büro – Funnel" | Gelernt | nur lesen, Einträge vorschlagen |
-| Drive-Ordner „Büro" | CLAUDE.md, PROMPTS.md, Vorlagen/ | nur lesen |
-| Slack | #sales-update, #meeting-notes | lesen, DM an Patrick |
+| `eintraege` | ein Satz je Firma oder Investor, mit MEDDPICC und offenen Punkten | lesen, anlegen, ändern |
+| `log` | ein Eintrag je Ereignis, mit Quelle | nur anhängen |
+| `stand` | eine Zeile: letzter Lauf, bis wohin Slack gelesen ist | lesen, ändern |
+| `gelernt` | Muster aus verlorenen Deals | nur lesen |
+| `gelernt_gruende` | die sechs zulässigen Gründe | nur lesen |
 
-## Feste IDs
+Auf allen Tabellen ist RLS aktiv, `anon` und `authenticated` haben keine
+Rechte, das Schema ist nicht über PostgREST freigegeben.
 
-- Doc „Büro – Funnel": `d6e60a64-a58c-4a3e-9201-cc8b07c409ca`
-- Drive-Ordner „Büro": `1oK30eLw8IDxN_S-JxQm9n7UEnOtfnN19`
-- Drive-Ordner „Büro/Vorlagen": `1MveaJ4XTVJyh1D-EgLy7debJ-mOGCCnJ`
-- Drive-Ordner „Büro/Archiv": `1rYVhkQgclu4DjkICQHs6z8-7TP8EASze`
-- Routine alt (Mac): `trig_011Q6PGEWyiKZQVwcxUDF7rj`, aktiv
-- Routine neu (Cloud): `trig_01NbZQDsyTTcimGHpkdbtHJL`, deaktiviert
+Google Drive bleibt als Lese-Ablage: Ordner „Büro"
+(`1oK30eLw8IDxN_S-JxQm9n7UEnOtfnN19`) mit CLAUDE.md, PROMPTS.md und
+`Vorlagen/` (`1MveaJ4XTVJyh1D-EgLy7debJ-mOGCCnJ`).
 
-## Stand
+## Routinen
 
-Erledigt:
+| Routine | ID | Zustand |
+| --- | --- | --- |
+| Morgen: Funnel (Supabase) | `trig_01NbZQDsyTTcimGHpkdbtHJL` | aktiv, `0 8 * * 1-5` |
+| Morgen: Funnel (Büro-Ablage, abgelöst) | `trig_011Q6PGEWyiKZQVwcxUDF7rj` | abgeschaltet |
 
-- Doc „Büro – Funnel" angelegt, Abschnitte Stand, Kunden, Investoren, Gelernt
-  und der Arbeitsvertrag mit der Routine.
-- Drive-Ordner „Büro" mit Vorlagen/ und Archiv/ angelegt.
-- Neue Routine mit dem Cloud-Prompt angelegt, Zeitplan `0 8 * * 1-5`, deaktiviert.
-- Migrations-Prompt zusätzlich als Google Doc in Drive abgelegt
-  (`1LHtphE9h_rRLu_iSBCHhLgIiAy0AKPRcAKkZd30OpCA`), weil die Desktop-Sitzung
-  nicht an das Git-Repo kommt.
-- Migration am 21.09.2026 auf dem Mac gelaufen und gegengeprüft:
-  - Drive: CLAUDE.md und PROMPTS.md als `text/markdown` im Ordner „Büro",
-    7 Dateien in „Vorlagen" inklusive MEDDPICC_Fragenkatalog_Scorecard.xlsx.
-    Keine Umwandlung in Google Docs.
-  - Doc: 2 Kunden (Modulat Leasing AG, World Bank Group), 0 Investoren.
-    Leere Felder bei World Bank blieben leer. „Gelernt" enthält die Struktur
-    aus gelernt.md, noch ohne Einträge. Lokaler Ordner unverändert.
+Die aktive Routine trägt Slack, Google Drive, Supabase und einen wirkungslosen
+Claude-Docs-Eintrag. Connectors lassen sich nur in der Routinen-Oberfläche auf
+claude.ai setzen — `create_trigger` lehnt den Parameter für diese Organisation
+ab, `update_trigger` kennt ihn nicht.
 
-Offen:
+## Stand am 21.09.2026
 
-1. Connectors an der neuen Routine: Slack, Google Drive und Claude Docs in der
-   Routinen-Oberfläche auf claude.ai ergänzen. Über die MCP-Werkzeuge geht das
-   nicht — `create_trigger` lehnt den Parameter für diese Organisation ab, und
-   `update_trigger` kennt ihn nicht. Die Routine steht sonst ohne Connectors da
-   (`mcp_connections: []`) und kann weder Slack noch Drive noch das Doc erreichen.
-2. Neue Routine aktivieren, alte Routine deaktivieren — erst wenn 1 steht.
+- Migration vom Mac gelaufen und geprüft: CLAUDE.md, PROMPTS.md und 7 Vorlagen
+  als Markdown in Drive, lokaler Ordner unverändert.
+- Erster echter Lauf auf Supabase: 7 Kunden, 4 Investoren, 18 Log-Zeilen.
+  Kein DDL ausgeführt, `public` nicht angefasst (jüngste Migration in der
+  Datenbank ist die eigene vom Schema-Aufbau).
 
-## Nicht übernommen
+## Offen
 
-- Modell: die alte Routine läuft auf `claude-fable-5-1`. Bei der neuen ist das
-  Feld leer, weil `create_trigger` kein Modell setzen kann.
-- Uhrzeit: `0 8 * * 1-5` ist UTC, also 10 Uhr deutscher Sommerzeit. Unverändert
-  aus der alten Routine übernommen.
+- Uhrzeit: `0 8 * * 1-5` ist UTC, also 10 Uhr deutscher Sommerzeit.
+  `0 6 * * 1-5` wären 8 Uhr.
+- Modell: die abgelöste Routine lief auf `claude-fable-5-1`, die neue auf dem
+  Standardmodell. `create_trigger` kann kein Modell setzen.
+- Terje (Boost4S) steht als Kunde in der Ablage, tauchte in einer früheren
+  Slack-Auswertung aber unter Investoren auf. Zuordnung ist zu klären.
+- Das Claude-Dokument „Büro – Funnel" ist nur noch eine Momentaufnahme vom
+  21.09. und wird von der Routine nicht mehr gepflegt.
